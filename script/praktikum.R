@@ -24,3 +24,4 @@ zodiak <- function(tanggal, bulan) {
 
 zodiak(30,10)
 zodiak(11,4)
+zodiak(1,6)
