@@ -1,0 +1,9 @@
+---
+title: "praktikum"
+output: html_document
+---
+
+```{r}
+# belum ada
+```
+

@@ -1,0 +1,318 @@
+```{r}
+# Intro -------------------------------------------------------------------
+search()
+```
+```{r}
+objects(4)
+```
+```{r}
+head(CO2)
+str(CO2)
+```
+```{r}
+CO2
+```
+
+```{r}
+# PLOT --------------------------------------------------------------------
+?plot() # Pilih yang generic X-Y Plotting
+
+```
+
+```{r}
+### 1 Variabel
+# Point
+plot(CO2$uptake, main="Plot Uptake")
+```
+```{R}
+# Eksplorasi Type Plot Lainnya
+plot(CO2$uptake,type="l",main="Plot Uptake type l")
+plot(CO2$uptake,type="b",main="Plot Uptake type b")
+plot(CO2$uptake,type="s",main="Plot Uptake type s")
+plot(CO2$uptake,type="o",main="Plot Uptake type o")
+plot(CO2$uptake,type="h",main="Plot Uptake type h")
+```
+```{r}
+# Atur Warna
+plot(CO2$uptake,type="l",col="magenta",main="Plot Uptake")
+```
+```{r}
+plot(CO2$uptake, main="Plot Uptake", cex=1)
+plot(CO2$uptake, main="Plot Uptake", cex=2)
+plot(CO2$uptake, main="Plot Uptake", cex=0.5)
+```
+
+```{r}
+plot(CO2$uptake, main="Plot Uptake", cex=2, pch=7)
+```
+
+```{r}
+### 2 Variabel
+plot(CO2$conc,CO2$uptake,type="p",col="red",main="Plot Conc vs Uptake")
+```
+```{r}
+plot(CO2$conc,CO2$uptake,type="p",col="red",main="Plot Conc vs Uptake")
+abline(lm(CO2$uptake~CO2$conc),col="blue") # Tambah Garis Regresi
+```
+
+```{r}
+plot(CO2$conc,CO2$uptake,type="p",col="red",main="Plot Conc vs Uptake")
+abline(lm(CO2$uptake~CO2$conc),col="blue") # Tambah Garis Regresi
+lines(CO2$conc,CO2$uptake,col="green") # Tambah line
+```
+```{r}
+plot(CO2$conc,CO2$uptake,type="l",col="red",main="Plot Conc vs Uptake", lwd=2)
+```
+```{r}
+plot(CO2$conc,CO2$uptake,type="l",col="red",main="Plot Conc vs Uptake", lwd=2,lty=3)
+```
+
+```{r}
+# Labelling
+plot(CO2$uptake, type="o", col="steelblue", 
+     xlab="Index", ylab="Value", main="Plot Uptake")
+```
+```{r}
+CO2$uptake
+```
+
+```{r}
+plot(CO2$uptake, type="o", col="steelblue", 
+     xlab="Index", ylab="Value", main="Plot Uptake")
+```
+
+```{r}
+# Boxplot
+plot(CO2$Plant,CO2$uptake,type="p",main="Plot Plant vs Uptake")
+plot(CO2$Type,CO2$uptake,type="p",main="Plot Type vs Uptake")
+
+```
+```{r}
+# qqnorm & qqplot ---------------------------------------------------------
+qqnorm(CO2$uptake)
+qqline(CO2$uptake,col="red")
+
+set.seed(123)
+y=rt(200,df=3)
+teoriticalQ=rt(200,df=3)
+qqplot(teoriticalQ,y)
+
+```
+```{r}
+# hist, boxp, pie ---------------------------------------------------------
+data = co2
+data
+
+```
+```{r}
+#histogram
+hist(CO2$uptake,col="lightblue",border="blue",main="Histogram of Uptake",xlab="Uptake")
+
+#boxplot
+boxplot(CO2$uptake,main="Boxplot of Uptake")
+
+#pie plot
+slices=c(10,12,4,16,8)
+country=c("US","UK","Germany","Canada","France")
+pie(slices,labels=country,main="Pie Chart")
+
+```
+```{r}
+x=c(-0.5,-0.5,0.5,0.5)
+y=c(-0.5,0.5,0.5,-0.5)
+plot(x,y,type="n",ylim=c(-1.5,1.5),xlim=c(-1.5,1.5),main
+="Persegi")
+polygon(x,y,col="green")
+
+
+```
+
+```{r}
+# polygon -----------------------------------------------------------------
+x=c(-0.5,-0.5,0.5,0.5)
+y=c(-0.5,0.5,0.5,-0.5)
+plot(x,y,type="n",ylim=c(-1.5,1.5),xlim=c(-1.5,1.5),main="Persegi")
+polygon(x,y,col="green")
+
+x1=c(-0.5,-1.5,-1)
+y1=c(0.5,0.5,-0.5)
+polygon(x1,y1,col="yellow")
+
+plot(x,y,type="n",ylim=c(-1.5,1.5),xlim=c(-1.5,1.5),main="Lingkaran")
+r=0.5
+x0=0
+y0=0
+theta=seq(0,2*pi,length=1000)
+a=x0+r*cos(theta)
+b=y0+r*sin(theta)
+polygon(a,b,col="blue")
+```
+```{r}
+# Membuat Gambar ----------------------------------------------------------
+#Membuat fungsi plot dengan titik tengah (0,0) dan batas y dan x masing-masing dari -25 hingga 25
+plot(0, 0, type='n', ylim=c(-25,25), xlim=c(-25,25), main='Captain America', asp=1)
+
+#Membuat lingkaran merah luar
+r=25
+x=0
+y=0
+theta=seq(0,2*pi,length=1000)
+a=x+r*cos(theta)
+b=y+r*sin(theta)
+polygon(a,b,col="darkred",border="darkred")
+
+```
+```{r}
+#Membuat fungsi plot dengan titik tengah (0,0) dan batas y dan x masing-masing dari -25 hingga 25
+plot(0, 0, type='n', ylim=c(-25,25), xlim=c(-25,25), main='Captain America', asp=1)
+
+#Membuat lingkaran merah luar
+r=25
+x=0
+y=0
+theta=seq(0,2*pi,length=1000)
+a=x+r*cos(theta)
+b=y+r*sin(theta)
+polygon(a,b,col="darkred",border="darkred")
+
+#Membuat lingkaran putih dalam
+r=22.5
+x=0
+y=0
+theta=seq(0,2*pi,length=1000)
+a=x+r*cos(theta)
+b=y+r*sin(theta)
+polygon(a,b,col="white", border="white")
+
+```
+```{r}
+#Membuat fungsi plot dengan titik tengah (0,0) dan batas y dan x masing-masing dari -25 hingga 25
+plot(0, 0, type='n', ylim=c(-25,25), xlim=c(-25,25), main='Captain America', asp=1)
+
+#Membuat lingkaran merah luar
+r=25
+x=0
+y=0
+theta=seq(0,2*pi,length=1000)
+a=x+r*cos(theta)
+b=y+r*sin(theta)
+polygon(a,b,col="darkred",border="darkred")
+
+#Membuat lingkaran putih dalam
+r=22.5
+x=0
+y=0
+theta=seq(0,2*pi,length=1000)
+a=x+r*cos(theta)
+b=y+r*sin(theta)
+polygon(a,b,col="white", border="white")
+
+#Membuat lingkaran merah dalam
+r=17.5
+x=0
+y=0
+theta=seq(0,2*pi,length=1000)
+a=x+r*cos(theta)
+b=y+r*sin(theta)
+polygon(a,b,col="darkred",border="darkred")
+```
+```{r}
+# Membuat Gambar ----------------------------------------------------------
+#Membuat fungsi plot dengan titik tengah (0,0) dan batas y dan x masing-masing dari -25 hingga 25
+plot(0, 0, type='n', ylim=c(-25,25), xlim=c(-25,25), main='Captain America', asp=1)
+
+#Membuat lingkaran merah luar
+r=25
+x=0
+y=0
+theta=seq(0,2*pi,length=1000)
+a=x+r*cos(theta)
+b=y+r*sin(theta)
+polygon(a,b,col="darkred",border="darkred")
+
+#Membuat lingkaran putih dalam
+r=22.5
+x=0
+y=0
+theta=seq(0,2*pi,length=1000)
+a=x+r*cos(theta)
+b=y+r*sin(theta)
+polygon(a,b,col="white", border="white")
+
+#Membuat lingkaran merah dalam
+r=17.5
+x=0
+y=0
+theta=seq(0,2*pi,length=1000)
+a=x+r*cos(theta)
+b=y+r*sin(theta)
+polygon(a,b,col="darkred",border="darkred")
+
+#Membuat lingkaran biru dalam
+r=15
+
+x=0
+y=0
+theta=seq(0,2*pi,length=1000)
+a=x+r*cos(theta)
+b=y+r*sin(theta)
+polygon(a,b,col="navy",border="navy")
+```
+```{r}
+# Membuat Gambar ----------------------------------------------------------
+#Membuat fungsi plot dengan titik tengah (0,0) dan batas y dan x masing-masing dari -25 hingga 25
+plot(0, 0, type='n', ylim=c(-25,25), xlim=c(-25,25), main='Captain America', asp=1)
+
+#Membuat lingkaran merah luar
+r=25
+x=0
+y=0
+theta=seq(0,2*pi,length=1000)
+a=x+r*cos(theta)
+b=y+r*sin(theta)
+polygon(a,b,col="darkred",border="darkred")
+
+#Membuat lingkaran putih dalam
+r=22.5
+x=0
+y=0
+theta=seq(0,2*pi,length=1000)
+a=x+r*cos(theta)
+b=y+r*sin(theta)
+polygon(a,b,col="white", border="white")
+
+#Membuat lingkaran merah dalam
+r=17.5
+x=0
+y=0
+theta=seq(0,2*pi,length=1000)
+a=x+r*cos(theta)
+b=y+r*sin(theta)
+polygon(a,b,col="darkred",border="darkred")
+
+#Membuat lingkaran biru dalam
+r=15
+
+x=0
+y=0
+theta=seq(0,2*pi,length=1000)
+a=x+r*cos(theta)
+b=y+r*sin(theta)
+polygon(a,b,col="navy",border="navy")
+
+#Membuat bintang putih tengah dengan tiga segitiga
+#Segitiga 1
+x=c(-14,0,14)
+y=c(5,-5,5)
+polygon(x,y,col="white", border="white")
+#Segitiga 2
+x=c(-9,0,5)
+y=c(-12,15,-2)
+polygon(x,y,col="white", border="white")
+#Segitiga 3
+x=c(9,0,-5)
+y=c(-12,15,-2)
+polygon(x,y,col="white", border="white")
+```
+
+
