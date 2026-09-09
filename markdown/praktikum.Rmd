@@ -1,9 +1,47 @@
 ---
-title: "praktikum"
+title: "Praktikum Komputasi Statistika"
+author: "Cheisa Billy Putra Antoni"
+date: "2026-09-09"
 output: html_document
 ---
 
+# Pertemuan 2
 ```{r}
-# belum ada
+library(tidyr)
+library(dplyr)
+library(stringr)
+```
+
+```{r}
+data(iris)
+head(iris)
+```
+
+```{r}
+iris_long <- iris %>%
+  gather(key = "Measurement", value = "Value", -Species)
+
+head(iris_long)
+```
+
+```{r}
+iris_separated <- iris_long %>%
+  separate(Measurement, into = c("Part", "Dimension"), sep = "\\.")
+
+head(iris_separated)
+```
+
+```{r}
+library(dplyr)
+data(PlantGrowth)
+df = PlantGrowth
+glimpse(df)
+pull(df, weight)
+slice_max(df, weight, n = 5)
+```
+
+```{r}
+library(tidyr)
+crossing(df)
 ```
 

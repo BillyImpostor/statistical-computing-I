@@ -1,0 +1,246 @@
+---
+title: "02-Data-Wrangling-dan-Aplikasi-R-Lainnya"
+author: "Giyar AR"
+date: "2026-09-08"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyr)
+library(dplyr)
+library(stringr)
+```
+
+## Bagian 1: tidyr
+
+### Memuat Data dan Menampilkan Data Awal
+```{r}
+library(tidyr)
+data(iris)
+head(iris)
+```
+
+### Mengubah Format Lebar ke Format Panjang
+```{r}
+iris_long <- iris %>%
+  gather(key = "Measurement", value = "Value", -Species)
+
+head(iris_long)
+```
+
+### Memisahkan Kolom Measurement Menjadi Dua Kolom
+```{r}
+iris_separated <- iris_long %>%
+  separate(Measurement, into = c("Part", "Dimension"), sep = "\\.")
+
+head(iris_separated)
+```
+
+### Menggabungkan Kolom Menjadi Satu Kolom
+```{r}
+iris_united <- iris_separated %>%
+  unite("Measurement", Part, Dimension, sep = ".")
+
+head(iris_united)
+```
+
+### Menghapus Baris dengan Nilai NA
+```{r}
+iris_missing <- iris
+iris_missing[1, 1] <- NA  # Menambahkan NA pada salah satu nilai
+
+iris_clean <- iris_missing %>%
+  drop_na()
+
+head(iris_clean)
+```
+
+### Mengganti Nilai NA dengan Nilai Tertentu
+```{r}
+iris_replace_na <- iris_long %>%
+  replace_na(list(Value = 0))
+
+head(iris_replace_na)
+```
+
+## Bagian 1b: Materi Tambahan tidyr
+
+### pivot_longer() dan pivot_wider()
+```{r}
+# pivot_longer(): format lebar -> format panjang
+iris_pivot_long <- iris %>%
+  pivot_longer(cols = -Species, names_to = "Measurement", values_to = "Value")
+
+head(iris_pivot_long)
+
+# pivot_wider(): format panjang -> format lebar
+iris_pivot_wide <- iris_pivot_long %>%
+  mutate(id = row_number()) %>%
+  pivot_wider(names_from = Measurement, values_from = Value)
+
+head(iris_pivot_wide)
+```
+
+### spread()
+```{r}
+iris_wide_again <- iris_separated %>%
+  unite("Measurement", Part, Dimension, sep = ".") %>%
+  mutate(id = row_number()) %>%
+  spread(key = Measurement, value = Value)
+
+head(iris_wide_again)
+```
+
+### fill()
+```{r}
+data_tidak_lengkap <- data.frame(
+  Tahun = c(2020, NA, NA, 2021, NA),
+  Penjualan = c(100, 150, 130, 200, 210)
+)
+
+data_terisi <- data_tidak_lengkap %>%
+  fill(Tahun, .direction = "down")
+
+data_terisi
+```
+
+## Bagian 2: dplyr
+
+### Memuat Data dan Library dplyr
+```{r}
+library(dplyr)
+data(airquality)
+head(airquality)
+```
+
+### Memilih Kolom Tertentu dari Data
+```{r}
+selected_data <- airquality %>%
+  select(Ozone, Temp, Wind)
+
+head(selected_data)
+```
+
+### Menyaring Baris Berdasarkan Kondisi Tertentu
+```{r}
+filtered_data <- airquality %>%
+  filter(Ozone > 30, Temp > 80)
+
+head(filtered_data)
+```
+
+### Membuat Kolom Baru
+```{r}
+mutated_data <- airquality %>%
+  mutate(Temp_Celsius = (Temp - 32) * 5/9)
+
+head(mutated_data)
+```
+
+### Menghitung Ringkasan Statistik
+```{r}
+summary_data <- airquality %>%
+  summarize(Mean_Ozone = mean(Ozone, na.rm = TRUE), Max_Temp = max(Temp, na.rm = TRUE))
+
+summary_data
+```
+
+### Mengelompokkan Data Berdasarkan Kategori
+```{r}
+grouped_data <- airquality %>%
+  group_by(Month) %>%
+  summarize(Mean_Temp = mean(Temp, na.rm = TRUE))
+
+grouped_data
+```
+
+### Mengurutkan Data Berdasarkan Kolom Tertentu
+```{r}
+arranged_data <- airquality %>%
+  arrange(desc(Temp))
+
+head(arranged_data)
+```
+
+## Bagian 2b: Materi Tambahan dplyr
+
+### rename()
+```{r}
+renamed_data <- airquality %>%
+  rename(Suhu = Temp, Angin = Wind)
+
+head(renamed_data)
+```
+
+### distinct()
+```{r}
+distinct_month <- airquality %>%
+  distinct(Month)
+
+distinct_month
+```
+
+### slice(), slice_max(), slice_min()
+```{r}
+slice_data <- airquality %>%
+  slice(1:5)
+
+slice_data
+
+top_temp <- airquality %>%
+  slice_max(Temp, n = 3)
+
+top_temp
+```
+
+### case_when()
+```{r}
+kategori_suhu <- airquality %>%
+  mutate(Kategori = case_when(
+    Temp < 70 ~ "Sejuk",
+    Temp >= 70 & Temp < 85 ~ "Hangat",
+    Temp >= 85 ~ "Panas"
+  ))
+
+head(kategori_suhu)
+```
+
+### Penggabungan Data (Join)
+```{r}
+data_kota <- data.frame(
+  ID = c(1, 2, 3),
+  Kota = c("Yogyakarta", "Bandung", "Surabaya")
+)
+
+data_nilai <- data.frame(
+  ID = c(1, 2, 4),
+  Nilai = c(90, 85, 75)
+)
+
+# left_join: pertahankan semua baris dari data_kota
+gabungan_left <- left_join(data_kota, data_nilai, by = "ID")
+gabungan_left
+
+# inner_join: hanya baris dengan ID yang cocok di kedua data
+gabungan_inner <- inner_join(data_kota, data_nilai, by = "ID")
+gabungan_inner
+
+# full_join: seluruh baris dari kedua data
+gabungan_full <- full_join(data_kota, data_nilai, by = "ID")
+gabungan_full
+```
+
+## Bagian 3: Materi Tambahan - Pembersihan Data Teks dengan stringr
+
+```{r}
+library(stringr)
+
+nama_kota <- c("  Yogyakarta ", "banDung", "SURABAYA ", "Jakarta  ", "nGaWi", "mOjOkErtO")
+
+nama_bersih <- nama_kota %>%
+  str_trim() %>%
+  str_to_title()
+
+nama_bersih
+```
+
