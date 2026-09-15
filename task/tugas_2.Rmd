@@ -1,0 +1,44 @@
+---
+title: "Tugas 2 Teori Komputasi Statistika I"
+author: "Cheisa Billy Putra Antoni"
+date: "2026-09-15"
+output: html_document
+---
+
+# Nomor 1
+```{r}
+set.seed(123)
+x1 <- rbinom(1000, size = 20, prob = 0.4)
+
+cat("Secara empiris, Mean = ", mean(x1))
+cat("\n")
+cat("Secara empiris, Variansi = ", var(x1))
+cat("\n")
+cat("Secara teori, Mean = ", 20*0.4)
+cat("\n")
+cat("Secara teori, Variansi = ", 20*0.4*0.6)
+```
+
+# Nomor 2
+```{r fig.width = 12, fig.height = 6}
+set.seed(123)
+x2 <- rnorm(1000)
+y <- x2^2
+
+hist(y, probability = TRUE, breaks = 30, col = "lightblue",
+     main = "Histogram y = x^2")
+
+cat("Distribusi dari Y adalah Chi-square")
+```
+
+# Nomor 3
+```{r fig.width = 12, fig.height = 6}
+set.seed(123)
+u <- runif(1000)
+x3 <- sqrt(u)
+
+u # Semua nilai sampel
+hist(x3, probability = TRUE, breaks = 30, col = "lightblue",
+     main = "Sampel menggunakan metode invers")
+```
+
