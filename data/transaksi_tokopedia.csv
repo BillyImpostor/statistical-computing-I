@@ -1,0 +1,57 @@
+ID_Transaksi,Tanggal,Marketplace,Status_Pesanan,Metode_Bayar
+TRX1003,2024-03-15,tokopedia,diproses,QRIS
+TRX1004,9 Januari 2024,Tokped,Complete,Transfer Bank
+TRX1005,24/01/2024,Tokped,Dibatalkan,Transfer Bank
+TRX1006,8 Maret 2024,Tokopedia,Complete,QRIS
+TRX1015,15 Februari 2024,Tokopedia,Complete,QRIS
+TRX1018,13/04/2024,Tokped,Complete,
+TRX1019,20 Februari 2024,Tokopedia,,QRIS
+TRX1021,14 Maret 2024,Tokopedia,Selesai,COD
+TRX1023,28/04/2024,tokopedia,Complete,Transfer Bank
+TRX1027,2024-03-11,Tokped,Dibatalkan,
+TRX1030,24/05/2024,Tokped,selesai,Transfer Bank
+TRX1031,21/05/2024,tokopedia,SELESAI,COD
+TRX1032,19/01/2024,tokopedia,Diproses,
+TRX1012,2024-04-30,Tokped,,QRIS
+TRX1035,21/05/2024,tokopedia,Dibatalkan,COD
+TRX1036,2024-05-09,Tokped,diproses,
+TRX1038,16/05/2024,Tokopedia,Diproses,COD
+TRX1039,7 Februari 2024,Tokopedia,selesai,Kartu Kredit
+TRX1049,18/04/2024,Tokopedia,Diproses,QRIS
+TRX1054,6 Maret 2024,Tokped,Diproses,
+TRX1059,01/03/2024,Tokopedia,Diproses,QRIS
+TRX1061,26 Januari 2024,Tokped,Diproses,QRIS
+TRX1065,20/04/2024,Tokped,selesai,
+TRX1067,7 Januari 2024,tokopedia,diproses,
+TRX1073,10 April 2024,Tokped,diproses,
+TRX1075,10 April 2024,tokopedia,Complete,
+TRX1077,24 Maret 2024,tokopedia,,COD
+TRX1078,2024-03-11,tokopedia,SELESAI,QRIS
+TRX1079,30 Mei 2024,Tokped,diproses,COD
+TRX1081,19/05/2024,tokopedia,selesai,Kartu Kredit
+TRX1082,17/02/2024,tokopedia,selesai,
+TRX1084,29 Januari 2024,Tokped,Diproses,
+TRX1033,2024-01-01,Tokped,selesai,
+TRX1087,05/01/2024,Tokped,Complete,COD
+TRX1093,16/01/2024,tokopedia,diproses,COD
+TRX1097,2024-01-22,tokopedia,diproses,Kartu Kredit
+TRX1053,09/04/2024,Tokped,,QRIS
+TRX1100,10/04/2024,Tokopedia,Dibatalkan,Kartu Kredit
+TRX1104,2024-04-11,tokopedia,Dibatalkan,
+TRX1106,17/02/2024,Tokped,SELESAI,Kartu Kredit
+TRX1109,11/03/2024,Tokped,,Kartu Kredit
+TRX1110,01/01/2024,Tokopedia,,QRIS
+TRX1112,2024-01-20,Tokped,selesai,
+TRX1114,2024-02-22,Tokped,SELESAI,Kartu Kredit
+TRX1119,13 Maret 2024,Tokopedia,Complete,
+TRX1127,2024-05-25,Tokopedia,Selesai,QRIS
+TRX1133,2024-04-30,tokopedia,Selesai,Kartu Kredit
+TRX1136,2024-03-14,tokopedia,Selesai,COD
+TRX1137,18 Maret 2024,Tokped,SELESAI,QRIS
+TRX1138,2024-05-09,Tokped,,
+TRX1139,29 Maret 2024,Tokopedia,Selesai,Transfer Bank
+TRX1143,2024-05-29,Tokped,diproses,
+TRX1145,15/05/2024,tokopedia,Complete,Transfer Bank
+TRX1147,2024-04-23,tokopedia,selesai,Kartu Kredit
+TRX1148,21/02/2024,Tokopedia,selesai,COD
+TRX1015,15 Februari 2024,Tokopedia,Complete,QRIS

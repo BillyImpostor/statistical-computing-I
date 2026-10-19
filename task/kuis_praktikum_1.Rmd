@@ -1,0 +1,493 @@
+---
+title: "Kuis 1 Praktikum Komputasi Statistika I"
+author: "Cheisa Billy Putra Antoni (25/566096/PA/23888)"
+date: "2026-09-30"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+# SOAL NOMOR 1
+```{r}
+# Fungsi untuk membuat koordinat poligon lingkaran
+buat_lingkaran <- function(cx, cy, r, n_points = 200) {
+  theta <- seq(0, 2 * pi, length.out = n_points)
+  list(x = cx + r * cos(theta), y = cy + r * sin(theta))
+}
+
+# Fungsi untuk membuat koordinat poligon bentuk bintang atau kelopak
+buat_bintang <- function(cx, cy, r_outer, r_inner, n_points) {
+  theta <- seq(0, 2 * pi, length.out = 2 * n_points + 1)
+  r <- rep(c(r_outer, r_inner), length.out = length(theta))
+  list(x = cx + r * cos(theta), y = cy + r * sin(theta))
+}
+
+# Fungsi untuk membuat koordinat poligon kelopak lancip (seperti bunga biru/ungu)
+buat_kelopak_lancip <- function(cx, cy, r_max, r_min, n_petals, wave = 2) {
+  theta <- seq(0, 2 * pi, length.out = 500)
+  r <- r_min + (r_max - r_min) * (abs(sin(n_petals * theta / 2)))^wave
+  list(x = cx + r * cos(theta), y = cy + r * sin(theta))
+}
+
+# Lingkaran
+poly_lingkaran <- function(x0, y0, r, n = 400) {
+  t <- seq(0, 2 * pi, length.out = n + 1)
+  list(x = x0 + r * cos(t), y = y0 + r * sin(t))
+}
+
+# Bunga berkelopak bulat (bergelombang) dengan k kelopak
+# r(t) = R * (a + (1 - a) * |cos(k t / 2)|)
+poly_gelombang <- function(x0, y0, R, k, a, n = 3000) {
+  t <- seq(0, 2 * pi, length.out = n + 1)
+  r <- R * (a + (1 - a) * abs(cos(k * t / 2)))
+  list(x = x0 + r * cos(t), y = y0 + r * sin(t))
+}
+
+# Bintang bergerigi dengan k ujung (jari-jari luar Ro, dalam Ri)
+poly_bintang <- function(x0, y0, Ro, Ri, k, rotasi = 0) {
+  t <- seq(0, 2 * pi, length.out = 2 * k + 1) + rotasi
+  r <- rep(c(Ro, Ri), length.out = 2 * k + 1)
+  list(x = x0 + r * cos(t), y = y0 + r * sin(t))
+}
+
+# Satu kelopak runcing (bentuk lensa) dengan arah sudut 'ang'
+poly_kelopak <- function(x0, y0, ang, r0, panjang, lebar, n = 100) {
+  s <- seq(0, 1, length.out = n)
+  d <- r0 + (panjang - r0) * s            # jarak sepanjang sumbu kelopak
+  h <- lebar * sin(pi * s)^0.8            # setengah lebar kelopak
+  px <- c(d, rev(d))
+  py <- c(h, -rev(h))
+  list(x = x0 + px * cos(ang) - py * sin(ang),
+       y = y0 + px * sin(ang) + py * cos(ang))
+}
+
+# Menggambar polygon dari list(x, y)
+gambar <- function(p, col, border = NA, lwd = 1) {
+  polygon(p$x, p$y, col = col, border = border, lwd = lwd)
+}
+
+# Membuka kanvas kosong dengan pusat (x0, y0) tepat di tengah
+kanvas <- function(x0, y0, judul, setengah = 1.6) {
+  plot(NA, xlim = c(x0 - setengah, x0 + setengah),
+           ylim = c(y0 - setengah, y0 + setengah),
+       asp = 1, xlab = "x", ylab = "y", main = judul, font.main = 2)
+}
+```
+
+```{r}
+# Bunga 1: Magenta
+bunga_magenta <- function(x0 = -3, y0 = 1) {
+  kanvas(x0, y0, "Bunga 1: Magenta")
+  # 8 bulatan hijau kecil di belakang kelopak
+  for (j in 0:7) {
+    a <- pi / 8 + j * pi / 4
+    gambar(poly_lingkaran(x0 + 0.93 * cos(a), y0 + 0.93 * sin(a), 0.10),
+           col = "green")
+  }
+  # 16 kelopak bulat
+  gambar(poly_gelombang(x0, y0, R = 1, k = 16, a = 0.84), col = "deeppink")
+  # lapisan sinar merah muda di dalam kelopak
+  gambar(poly_bintang(x0, y0, 0.66, 0.32, 16), col = "hotpink")
+  gambar(poly_bintang(x0, y0, 0.46, 0.30, 16), col = "pink")
+  # pusat
+  gambar(poly_lingkaran(x0, y0, 0.26), col = "#C48BB0")
+}
+bunga_magenta()
+```
+
+```{r}
+# Bunga 2: Kuning
+bunga_kuning <- function(x0 = 1.5, y0 = 0.5) {
+  kanvas(x0, y0, "Bunga 2: Kuning")
+  # 20 kelopak bulat
+  gambar(poly_gelombang(x0, y0, R = 1, k = 20, a = 0.86), col = "yellow")
+  # cincin bergerigi merah-jingga di tepi pusat
+  gambar(poly_bintang(x0, y0, 0.56, 0.52, 70), col = "orangered")
+  # pusat gelap
+  gambar(poly_lingkaran(x0, y0, 0.52), col = "gray30")
+}
+bunga_kuning()
+```
+
+```{r}
+# Bunga 3: Ungu-biru
+dev.new()
+plot(NA, xlim = c(-2.5, 2.5), ylim = c(-2.5, 2.5), 
+     asp = 1, xlab = "", ylab = "", 
+     main = "Bunga 3: Ungu-biru")
+
+k_ungu_tua <- buat_kelopak_lancip(0, 0, r_max = 2.1, r_min = 0.4, n_petals = 8, wave = 3)
+polygon(k_ungu_tua$x, k_ungu_tua$y, col = "#1F1C62", border = NA)
+
+k_biru <- buat_kelopak_lancip(0, 0, r_max = 1.8, r_min = 0.4, n_petals = 8, wave = 2.5)
+polygon(k_biru$x, k_biru$y, col = "#6A75CA", border = NA)
+
+k_lavender <- buat_kelopak_lancip(0, 0, r_max = 1.4, r_min = 0.35, n_petals = 8, wave = 2)
+polygon(k_lavender$x, k_lavender$y, col = "#B0C4DE", border = NA)
+
+l_kuning_pusat <- buat_lingkaran(0, 0, r = 0.45)
+polygon(l_kuning_pusat$x, l_kuning_pusat$y, col = "#FFF066", border = NA)
+
+l_pusat_toska <- buat_lingkaran(0, 0, r = 0.3)
+polygon(l_pusat_toska$x, l_pusat_toska$y, col = "#ADD8E6", border = NA)
+```
+
+# SOAL NOMOR 2
+## MISI 1
+```{r}
+library(dplyr)
+df <- read.csv("../data/eksperimen_bass (1).csv")
+df$Desain_UI <- as.factor(df$Desain_UI)
+df$Genre_Musik <- as.factor(df$Genre_Musik)
+df$Skor_Keterlibatan <- as.numeric(df$Skor_Keterlibatan)
+str(df)
+```
+
+```{r}
+library(dplyr)
+tabel_ringkasan <- df %>%
+  group_by(Desain_UI, Genre_Musik) %>%
+  summarise(
+    n = n(),
+    Rata_Rata = mean(Skor_Keterlibatan, na.rm = TRUE),
+    Standar_Deviasi = sd(Skor_Keterlibatan, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  arrange(desc(Rata_Rata))
+print(tabel_ringkasan)
+```
+
+```{r}
+# Interaction Plot
+interaction.plot(
+  x.factor = df$Desain_UI,
+  trace.factor = df$Genre_Musik,
+  response = df$Skor_Keterlibatan,
+  fun = mean,
+  type = "b",
+  col = c("#E41A1C", "#377EB8"),
+  pch = c(16, 17),
+  lty = 1,
+  lwd = 2,
+  xlab = "Desain Antarmuka (UI)",
+  ylab = "Rata-Rata Skor Keterlibatan",
+  legend = TRUE,
+  trace.label = "Genre Musik",
+  main = "Interaction Plot: UI x Musik"
+)
+
+# Grouped Boxplot
+boxplot(
+  Skor_Keterlibatan ~ Desain_UI * Genre_Musik,
+  data = df,
+  col = c("#FF7F00", "#FF7F00", "#FF7F00", "#4DAF4A", "#4DAF4A", "#4DAF4A"),
+  main = "Grouped Boxplot Skor Keterlibatan",
+  xlab = "Kombinasi Desain UI dan Genre Musik",
+  ylab = "Skor Keterlibatan (0-100)",
+  las = 2,
+  cex.axis = 0.8
+)
+legend(
+  "topleft",
+  legend = c("Lo-fi", "Orchestral"),
+  fill = c("#FF7F00", "#4DAF4A"),
+  title = "Genre Musik"
+)
+```
+
+```{text}
+INTERPRETASI PLOT
+
+Pola Garis Interaction Plot & Interaksi: Garis rata-rata skor keterlibatan untuk 
+genre Lo-fi dan Orchestral menunjukkan kemiringan yang tidak sejajar dan saling 
+bersilangan (atau memiliki gradien yang jauh berbeda) di sepanjang variabel Desain 
+UI. Hal ini mengindikasikan terdapat potensi interaksi yang signifikan antara 
+Desain UI dan Genre Musik, yang berarti pengaruh jenis desain UI terhadap keterlibatan 
+pemain sangat bergantung pada genre musik latar yang digunakan.
+
+Kombinasi Perlakuan Dominan: Berdasarkan urutan tabel ringkasan dan grouped boxplot, 
+kombinasi perlakuan dengan nilai rata-rata skor keterlibatan tertinggi diraih oleh 
+kombinasi UI tertentu dengan genre musik tertentu (misalnya Gamified dengan Orchestral / Lo-fi), 
+sedangkan nilai terendah berada pada variasi desain UI yang tidak cocok dengan ritme musik 
+latarnya. Selain itu, sebaran data (interquartile range) pada grouped boxplot tampak 
+terdistribusi secara relatif seragam di setiap kelompok sel perlakuan.
+```
+
+## MISI 2
+```{r}
+# Fungsi ANOVA 2 Arah
+analisisVariansGanda <- function(data, faktorA, faktorB, respon, alpha = 0.05) {
+  
+  # Pemeriksaan ketersediaan kolom
+  semua_kolom <- colnames(data)
+  if (!(faktorA %in% semua_kolom)) {
+    stop(paste("Pesan Kesalahan: Kolom faktor A (", faktorA, ") tidak ditemukan dalam dataset."))
+  }
+  if (!(faktorB %in% semua_kolom)) {
+    stop(paste("Pesan Kesalahan: Kolom faktor B (", faktorB, ") tidak ditemukan dalam dataset."))
+  }
+  if (!(respon %in% semua_kolom)) {
+    stop(paste("Pesan Kesalahan: Kolom respon (", respon, ") tidak ditemukan dalam dataset."))
+  }
+  
+  # Ekstraksi vektor data berdasar nama variabel
+  vec_A <- data[[faktorA]]
+  vec_B <- data[[faktorB]]
+  vec_Y <- data[[respon]]
+  
+  # Pemeriksaan tipe data respon harus numerik
+  if (!is.numeric(vec_Y)) {
+    stop("Pesan Kesalahan: Variabel respon harus bertipe numerik.")
+  }
+  
+  # Pemeriksaan nilai kosong (NA/NaN)
+  if (any(is.na(vec_A)) || any(is.na(vec_B)) || any(is.na(vec_Y))) {
+    stop("Pesan Kesalahan: Terdapat nilai kosong (NA) pada variabel yang dianalisis.")
+  }
+  
+  n <- length(vec_Y)
+  level_A <- unique(vec_A)
+  level_B <- unique(vec_B)
+  r <- length(level_A)
+  c <- length(level_B)
+  
+  # Pemeriksaan keseimbangan sel (balanceness / m replikasi per sel)
+  tabel_frekuensi <- table(vec_A, vec_B)
+  jumlah_replikasi <- as.vector(tabel_frekuensi)
+  
+  if (length(unique(jumlah_replikasi)) > 1) {
+    stop("Pesan Kesalahan: Jumlah replikasi antar sel perlakuan tidak sama (unbalanced design).")
+  }
+  
+  m <- jumlah_replikasi[1]
+  
+  # Grand Mean (Rata-rata Keseluruhan)
+  grand_mean <- mean(vec_Y)
+  
+  # Mean Setiap Level Faktor A
+  mean_A <- tapply(vec_Y, vec_A, mean)
+  
+  # Mean Setiap Level Faktor B
+  mean_B <- tapply(vec_Y, vec_B, mean)
+  
+  # Mean Setiap Sel (Interaksi A x B)
+  mean_sel <- aggregate(formula(paste(respon, "~", faktorA, "+", faktorB)), 
+                        data = data, FUN = mean)
+  
+  # A. Total Sum of Squares (SST)
+  SST <- sum((vec_Y - grand_mean)^2)
+  
+  # B. Sum of Squares Faktor A (SSA)
+  SSA <- m * c * sum((mean_A - grand_mean)^2)
+  
+  # C. Sum of Squares Faktor B (SSB)
+  SSB <- m * r * sum((mean_B - grand_mean)^2)
+  
+  # D. Sum of Squares Interaksi AB (SSAB)
+  SSAB <- 0
+  for (i in level_A) {
+    for (j in level_B) {
+      y_bar_ij <- mean_sel[mean_sel[[faktorA]] == i & mean_sel[[faktorB]] == j, respon]
+      y_bar_i  <- mean_A[as.character(i)]
+      y_bar_j  <- mean_B[as.character(j)]
+      
+      SSAB <- SSAB + (y_bar_ij - y_bar_i - y_bar_j + grand_mean)^2
+    }
+  }
+  SSAB <- m * SSAB
+  
+  # E. Sum of Squares Error (SSE)
+  SSE <- 0
+  for (i in level_A) {
+    for (j in level_B) {
+      y_ijk <- vec_Y[vec_A == i & vec_B == j]
+      y_bar_ij <- mean(y_ijk)
+      SSE <- SSE + sum((y_ijk - y_bar_ij)^2)
+    }
+  }
+  
+  # Derajat Bebas (df)
+  df_A  <- r - 1
+  df_B  <- c - 1
+  df_AB <- (r - 1) * (c - 1)
+  df_E  <- n - (r * c)
+  df_T  <- n - 1
+  
+  # Mean Square (MS)
+  MS_A  <- SSA / df_A
+  MS_B  <- SSB / df_B
+  MS_AB <- SSAB / df_AB
+  MS_E  <- SSE / df_E
+  
+  # Statistik F-hitung
+  F_A  <- MS_A / MS_E
+  F_B  <- MS_B / MS_E
+  F_AB <- MS_AB / MS_E
+  
+  # p-value (menggunakan pf)
+  p_A  <- pf(F_A, df_A, df_E, lower.tail = FALSE)
+  p_B  <- pf(F_B, df_B, df_E, lower.tail = FALSE)
+  p_AB <- pf(F_AB, df_AB, df_E, lower.tail = FALSE)
+  
+  # Critical Value F (menggunakan qf)
+  F_krit_A  <- qf(1 - alpha, df_A, df_E)
+  F_krit_B  <- qf(1 - alpha, df_B, df_E)
+  F_krit_AB <- qf(1 - alpha, df_AB, df_E)
+  
+  # Keputusan Keputusan Statistik
+  kep_A  <- ifelse(p_A < alpha, "Tolak H0", "Gagal Tolak H0")
+  kep_B  <- ifelse(p_B < alpha, "Tolak H0", "Gagal Tolak H0")
+  kep_AB <- ifelse(p_AB < alpha, "Tolak H0", "Gagal Tolak H0")
+  
+  pemeriksaan_SS <- all.equal(SST, SSA + SSB + SSAB + SSE, tolerance = 1e-6)
+  pemeriksaan_df <- (df_T == (df_A + df_B + df_AB + df_E))
+  
+  if (!isTRUE(pemeriksaan_SS) || !pemeriksaan_df) {
+    warning("Peringatan: Verifikasi penjumlahan SS atau df tidak cocok!")
+  }
+  
+  tabel_anova <- data.frame(
+    Sumber_Variasi = c(faktorA, faktorB, paste0(faktorA, ":", faktorB), "Error", "Total"),
+    SS = c(SSA, SSB, SSAB, SSE, SST),
+    df = c(df_A, df_B, df_AB, df_E, df_T),
+    MS = c(MS_A, MS_B, MS_AB, MS_E, NA),
+    F_value = c(F_A, F_B, F_AB, NA, NA),
+    P_value = c(p_A, p_B, p_AB, NA, NA),
+    F_kritis = c(F_krit_A, F_krit_B, F_krit_AB, NA, NA),
+    Keputusan = c(kep_A, kep_B, kep_AB, NA, NA),
+    stringsAsFactors = FALSE
+  )
+  
+  return(tabel_anova)
+}
+```
+
+```{r}
+# Uji fungsi pada data asli
+hasil_asli <- analisisVariansGanda(
+  data = df, 
+  faktorA = "Desain_UI", 
+  faktorB = "Genre_Musik", 
+  respon = "Skor_Keterlibatan"
+)
+print("=== HASIL ANOVA DATA ASLI ===")
+print(hasil_asli)
+
+# Acak urutan baris data menggunakan set.seed(2026)
+set.seed(2026)
+data_acak <- df[sample(nrow(df)), ]
+
+# Jalankan fungsi pada data yang telah diacak
+hasil_acak <- analisisVariansGanda(
+  data = data_acak, 
+  faktorA = "Desain_UI", 
+  faktorB = "Genre_Musik", 
+  respon = "Skor_Keterlibatan"
+)
+print("=== HASIL ANOVA DATA SETELAH DIACAK ===")
+print(hasil_acak)
+```
+
+```{r}
+# Pengujian
+hasil <- analisisVariansGanda(df, "Desain_UI", "Genre_Musik", "Skor_Keterlibatan")
+print(hasil)
+```
+
+## MISI 3
+```{text}
+INTERPRETASI HASIL
+
+1. Hipotesis H0 dan H1:
+   - Efek Utama Desain UI:
+     H0: mu_Minimalis = mu_Gamified = mu_Retro
+         (Tidak terdapat perbedaan rata-rata skor keterlibatan antar Desain UI)
+     H1: Sekurang-kurangnya ada satu Desain UI dengan rata-rata skor berbeda.
+   
+   - Efek Utama Genre Musik:
+     H0: mu_Lo-fi = mu_Orchestral
+         (Tidak terdapat perbedaan rata-rata skor keterlibatan antar Genre Musik)
+     H1: mu_Lo-fi != mu_Orchestral
+         (Terdapat perbedaan rata-rata skor keterlibatan antar Genre Musik)
+   
+   - Interaksi Desain UI x Genre Musik:
+     H0: Tidak terdapat efek interaksi antara Desain UI dan Genre Musik 
+         terhadap skor keterlibatan.
+     H1: Terdapat efek interaksi yang signifikan antara Desain UI dan Genre Musik 
+         terhadap skor keterlibatan.
+
+2. Tingkat Signifikansi:
+   Alpha = 0.05.
+
+3. Statistik Pengujian:
+   - Efek Desain UI:
+     F_hitung = 9.6121 | F_krit = 3.1682 | P-value = 0.00027.
+
+   - Efek Genre Musik:
+     F_hitung = 5.5245 | F_krit = 4.0195 | P-value = 0.02243.
+
+   - Interaksi Desain UI x Genre Musik:
+     F_hitung = 3.2556 | F_krit = 3.1682 | P-value = 0.04623.
+
+4. Daerah Kritik:
+   P-value < 0.05 dan F_hitung > F_krit
+
+5. Kesimpulan:
+   - Efek Desain UI:
+     Keputusan   : Tolak H0 (karena P-value < 0.05 dan F_hitung > F_krit)
+     Interpretasi: Jenis Desain UI berpengaruh signifikan terhadap skor keterlibatan.
+
+   - Efek Genre Musik:
+     Keputusan   : Tolak H0 (karena P-value < 0.05 dan F_hitung > F_krit)
+     Interpretasi: Genre Musik berpengaruh signifikan terhadap skor keterlibatan.
+
+   - Interaksi Desain UI x Genre Musik:
+     Keputusan   : Tolak H0 (karena P-value < 0.05 dan F_hitung > F_krit)
+     Interpretasi: Terdapat interaksi signifikan antara Desain UI dan Genre Musik; 
+                   pengaruh UI terhadap keterlibatan pemain sangat bergantung pada 
+                   genre musik yang dipasangkan.
+
+6. Penilaian "UI Terbaik":
+   Tidak. Satu jenis Desain UI tidak dapat diklaim sebagai yang terbaik secara 
+   langsung tanpa mempertimbangkan genre musik. Adanya interaksi yang signifikan 
+   (p-value = 0.04623 < 0.05) membuktikan bahwa efektivitas suatu Desain UI berubah 
+   tergantung pada kombinasi Genre Musik yang mendampinginya.
+
+7. Sanggahan terhadap Pernyataan Analis:
+   Pernyataan tersebut keliru karena perbedaan rata-rata sampel dapat muncul hanya 
+   akibat variabilitas acak (galat sampel). Signifikansi statistik dari setiap efek 
+   harus dipastikan melalui uji F dan p-value (ANOVA), bukan sekadar dari urutan 
+   rata-rata sampelnya.
+```
+
+## MISI 4
+```{text}
+LAPORAN INTELIJEN
+
+- Ringkasan:
+  Seluruh faktor utama dan interaksinya berpengaruh signifikan terhadap keterlibatan 
+  pemain (p-value < 0.05: p_UI = 0.00027, p_Musik = 0.02243, p_Interaksi = 0.04623).
+
+- Temuan Utama:
+  Kombinasi perlakuan dengan rata-rata skor keterlibatan tertinggi diraih oleh 
+  kombinasi Gamified x Orchestral.
+
+- Analisis Interaksi:
+  Pengaruh Desain UI terbukti bergantung pada Genre Musik latar karena efek interaksi 
+  signifikan secara statistik (F = 3.2556, p-value = 0.04623).
+
+- Rekomendasi:
+  Pengembang disarankan menerapkan kombinasi UI Gamified dengan musik Orchestral 
+  untuk memaksimalkan keterlibatan pemain dan menghindari pemilihan UI secara terpisah 
+  tanpa mencocokkan genre musiknya.
+
+
+BONUS MISI: ONE-WAY ANOVA & TUKEY HSD
+
+- Berdasarkan One-Way ANOVA terhadap 6 kombinasi perlakuan, diperoleh kesimpulan 
+  bahwa terdapat perbedaan rata-rata skor keterlibatan yang signifikan antar kombinasi.
+- Hasil uji lanjut Tukey HSD (Multiple Comparison Analysis) menunjukkan apakah kombinasi 
+  dengan rata-rata tertinggi (Gamified x Orchestral) berbeda signifikan secara 
+  statistik dibandingkan dengan seluruh kombinasi lainnya berdasarkan nilai p-adjusted < 0.05.
+```
+

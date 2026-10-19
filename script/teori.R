@@ -78,3 +78,33 @@ system.time({
 })
 
 all.equal(s_loop, s_vektor)
+
+# Uji Hipotesis
+miu_nol <- 500
+n <- 12
+sampel <- c(495, 505, 498, 510, 492, 500, 503, 497, 508, 494, 501, 499)
+miu <- mean(sampel)
+std <- sd(sampel)
+
+## Hipotesis Manual
+## H0: miu = 500
+## H1: miu != 500
+
+## Tingkat Signifikansi
+## 0.05
+
+## Statistik Uji
+t <- (miu - miu_nol) / (std / sqrt(n))
+
+## Daerah Kritik
+t_tabel <- 2.201
+if (abs(t) > t_tabel) {
+  cat("H0 ditolak")
+} else {
+  cat("H0 tidak ditolak")
+}
+
+# Uji Hipotesis t.test
+t.test(x = sampel, mu = miu_nol, alternative = "two.sided")
+
+t

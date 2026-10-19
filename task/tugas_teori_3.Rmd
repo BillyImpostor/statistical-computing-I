@@ -1,0 +1,199 @@
+---
+title: "Tugas 3 Teori Komputasi Statistika I"
+author: "Cheisa Billy Putra Antoni"
+date: "2026-09-23"
+output: html_document
+---
+
+# SOAL NOMOR 3
+```{r}
+# Inisiasi variabel
+n1 <- c(32, 35, 30, 33, 31, 34, 29, 36, 33, 32)
+n2 <- c(28, 30, 27, 29, 31, 26, 28, 30, 29, 27)
+
+# Hitung mean & variansi
+mean_n1 <- mean(n1)
+mean_n2 <- mean(n2)
+var_n1 <- var(n1)
+var_n2 <- var(n2)
+df3 <- data.frame(
+  variabel = c("n1", "n2"),
+  mean = c(mean_n1, mean_n2),
+  variansi = c(var_n1, var_n2)
+)
+head(df3)
+```
+
+```{r}
+# Uji kesamaan variansi (Manual)
+cat("UJI KESAMAAN VARIANSI DUA VARIABEL DENGAN F-TEST MANUAL", "\n")
+cat("1) Hipotesis", "\n")
+cat("H0: Variansi n1 = variansi n2", "\n")
+cat("H1: Variansi n1 != variansi n2", "\n\n")
+cat("2) Tingkat Signifikansi", "\n")
+Alpha <- 0.05
+cat("Alpha = 1 - Interval Konfidensi", "\n")
+cat("Alpha = 1 -", 1 - Alpha, "\n")
+cat("Alpha =", Alpha, "\n\n")
+cat("3) Statistik Uji", "\n")
+f_hitung <- var_n1 / var_n2
+cat("Diperoleh f_hitung =", f_hitung, "\n\n")
+cat("4) Daerah Kritik", "\n")
+cat("H0 ditolak saat f_hitung > f_tabel_kanan atau f_hitung < f_tabel_kiri", "\n\n")
+f_tabel_kanan <- 4.026
+f_tabel_kiri <- 0.248
+cat("5) Kesimpulan", "\n")
+if (f_hitung < f_tabel_kiri | f_hitung > f_tabel_kanan) {
+  cat("Berdasarkan hasil perhitungan, didapatkan f_hitung sebesar", f_hitung, "dan dengan melihat daerah kritik H0 ditolak saat f_hitung > f_tabel_kanan atau f_hitung < f_tabel_kiri, maka H0 ditolak. Demikian dapat disimpulkan bahwa variansi n1 != variansi n2")
+} else {
+  cat("Berdasarkan hasil perhitungan, didapatkan f_hitung sebesar", f_hitung, "dan dengan melihat daerah kritik H0 ditolak saat f_hitung > f_tabel_kanan atau f_hitung < f_tabel_kiri, maka H0 tidak ditolak. Demikian dapat disimpulkan bahwa variansi n1 = variansi n2")
+}
+```
+
+```{r}
+# Uji kesamaan variansi (Menggunakan var.test())
+cat("UJI KESAMAAN VARIANSI DUA VARIABEL DENGAN F-TEST var.test()", "\n")
+cat("1) Hipotesis", "\n")
+cat("H0: Variansi n1 = variansi n2", "\n")
+cat("H1: Variansi n1 != variansi n2", "\n\n")
+cat("2) Tingkat Signifikansi", "\n")
+Alpha <- 0.05
+cat("Alpha = 1 - Interval Konfidensi", "\n")
+cat("Alpha = 1 -", 1 - Alpha, "\n")
+cat("Alpha =", Alpha, "\n\n")
+cat("3) Statistik Uji", "\n")
+cat("Diperoleh hasil output var.test() =")
+var.test(n1, n2, alternative = "two.sided")
+p_value <- 0.3573
+cat("4) Daerah Kritik", "\n")
+cat("H0 ditolak saat p_value < Alpha", "\n\n")
+cat("5) Kesimpulan", "\n")
+if (p_value < Alpha) {
+  cat("Berdasarkan hasil perhitungan, didapatkan p_value sebesar", p_value, "dan dengan melihat daerah kritik H0 ditolak saat p_value < Alpha, maka H0 ditolak. Demikian dapat disimpulkan bahwa variansi n1 != variansi n2")
+} else {
+  cat("Berdasarkan hasil perhitungan, didapatkan p_value sebesar", p_value, "dan dengan melihat daerah kritik H0 ditolak saat p_value < Alpha, maka H0 tidak ditolak. Demikian dapat disimpulkan bahwa variansi n1 = variansi n2")
+}
+```
+
+```{r}
+# Uji T mean 2 sampel independen (Manual)
+cat("UJI PERBEDAAN RATA-RATA 2 SAMPEL DENGAN T-TEST POOLED MANUAL", "\n")
+cat("1) Hipotesis", "\n")
+cat("H0: Mean n1 = mean n2", "\n")
+cat("H1: Mean n1 != mean n2", "\n\n")
+cat("2) Tingkat Signifikansi", "\n")
+Alpha <- 0.05
+cat("Alpha = 1 - Interval Konfidensi", "\n")
+cat("Alpha = 1 -", 1 - Alpha, "\n")
+cat("Alpha =", Alpha, "\n\n")
+cat("3) Statistik Uji", "\n")
+sp <- ((var_n1 * 9) + (var_n2 * 9)) / (10 + 10 - 2)
+t_hitung <- (mean_n1 - mean_n2) / sqrt(sp * 0.2)
+cat("Diperoleh t_hitung =", t_hitung, "\n\n")
+cat("4) Daerah Kritik", "\n")
+cat("H0 ditolak saat |t_hitung| > t_tabel", "\n\n")
+t_tabel <- 2.101
+cat("5) Kesimpulan", "\n")
+if (abs(t_hitung) > t_tabel) {
+  cat("Berdasarkan hasil perhitungan, didapatkan t_hitung sebesar", t_hitung, "dan dengan melihat daerah kritik H0 ditolak saat |t_hitung| > t_tabel, maka H0 ditolak. Demikian dapat disimpulkan bahwa mean n1 != mean n2")
+} else {
+  cat("Berdasarkan hasil perhitungan, didapatkan t_hitung sebesar", t_hitung, "dan dengan melihat daerah kritik H0 ditolak saat |t_hitung| > t_tabel, maka H0 tidak ditolak. Demikian dapat disimpulkan bahwa mean n1 = mean n2")
+}
+```
+
+```{r}
+# Uji T mean 2 sampel independen (Menggunakan t.test())
+cat("UJI PERBEDAAN RATA-RATA 2 SAMPEL DENGAN T-TEST POOLED t.test()", "\n")
+cat("1) Hipotesis", "\n")
+cat("H0: Mean n1 = mean n2", "\n")
+cat("H1: Mean n1 != mean n2", "\n\n")
+cat("2) Tingkat Signifikansi", "\n")
+Alpha <- 0.05
+cat("Alpha = 1 - Interval Konfidensi", "\n")
+cat("Alpha = 1 -", 1 - Alpha, "\n")
+cat("Alpha =", Alpha, "\n\n")
+cat("3) Statistik Uji", "\n")
+cat("Diperoleh hasil output t.test() =")
+t.test(n1, n2, alternative = "two.sided", paired = FALSE, mu = 0, var.equal = TRUE)
+p_value <- 0.0001758
+cat("4) Daerah Kritik", "\n")
+cat("H0 ditolak saat p_value < Alpha", "\n\n")
+cat("5) Kesimpulan", "\n")
+if (p_value < Alpha) {
+  cat("Berdasarkan hasil perhitungan, didapatkan p_value sebesar", p_value, "dan dengan melihat daerah kritik H0 ditolak saat p_value < Alpha, maka H0 ditolak. Demikian dapat disimpulkan bahwa mean n1 != mean n2")
+} else {
+  cat("Berdasarkan hasil perhitungan, didapatkan p_value sebesar", p_value, "dan dengan melihat daerah kritik H0 ditolak saat p_value < Alpha, maka H0 tidak ditolak. Demikian dapat disimpulkan bahwa mean n1 = mean n2")
+}
+```
+
+# SOAL NOMOR 4
+```{r}
+# Inisiasi variabel
+sebelum <- c(65, 70, 68, 72, 66, 74, 69, 71, 67)
+sesudah <- c(72, 75, 74, 78, 70, 79, 73, 76, 71)
+
+# Hitung selisih, rata-rata selisih, dan standar deviasi selisih
+selisih <- sesudah - sebelum
+cat("Nilai selisih (d) dari sesudah - sebelum =", selisih)
+mean_selisih <- mean(selisih)
+sd_selisih <- sd(selisih)
+df4 <- data.frame(
+  variabel = c("selisih (d)"),
+  mean = c(mean_selisih),
+  standar_deviasi = c(sd_selisih)
+)
+head(df4)
+```
+
+```{r}
+# Uji T mean 2 sampel Dependen (Manual)
+cat("UJI PERBEDAAN RATA-RATA 2 SAMPEL DEPENDEN DENGAN T-TEST PAIRED MANUAL", "\n")
+cat("1) Hipotesis", "\n")
+cat("H0: Sesudah <= Sebelum", "\n")
+cat("H1: Sesudah > Sebelum", "\n\n")
+cat("2) Tingkat Signifikansi", "\n")
+Alpha <- 0.05
+cat("Alpha = 1 - Interval Konfidensi", "\n")
+cat("Alpha = 1 -", 1 - Alpha, "\n")
+cat("Alpha =", Alpha, "\n\n")
+cat("3) Statistik Uji", "\n")
+t_hitung <- (mean_selisih) / (sd_selisih / sqrt(9))
+cat("Diperoleh t_hitung =", t_hitung, "\n\n")
+cat("4) Daerah Kritik", "\n")
+cat("H0 ditolak saat t_hitung > t_tabel", "\n\n")
+t_tabel <- 1.860
+cat("5) Kesimpulan", "\n")
+if (t_hitung > t_tabel) {
+  cat("Berdasarkan hasil perhitungan, didapatkan t_hitung sebesar", t_hitung, "dan dengan melihat daerah kritik H0 ditolak saat t_hitung > t_tabel, maka H0 ditolak. Demikian dapat disimpulkan bahwa sesudah > sebelum atau pelatihan meningkatkan skor kemampuan")
+} else {
+  cat("Berdasarkan hasil perhitungan, didapatkan t_hitung sebesar", t_hitung, "dan dengan melihat daerah kritik H0 ditolak saat t_hitung > t_tabel, maka H0 tidak ditolak. Demikian dapat disimpulkan bahwa sesudah <= sebelum atau pelatihan tidak meningkatkan skor kemampuan")
+}
+```
+
+
+```{r}
+# Uji T mean 2 sampel Dependen (t.test())
+cat("UJI PERBEDAAN RATA-RATA 2 SAMPEL DEPENDEN DENGAN T-TEST PAIRED t.test()", "\n")
+cat("1) Hipotesis", "\n")
+cat("H0: Sesudah <= Sebelum", "\n")
+cat("H1: Sesudah > Sebelum", "\n\n")
+cat("2) Tingkat Signifikansi", "\n")
+Alpha <- 0.05
+cat("Alpha = 1 - Interval Konfidensi", "\n")
+cat("Alpha = 1 -", 1 - Alpha, "\n")
+cat("Alpha =", Alpha, "\n\n")
+cat("3) Statistik Uji", "\n")
+cat("Diperoleh hasil output t.test() =")
+t.test(sesudah, sebelum, mu = 0, alternative = "greater", paired = TRUE)
+p_value <- 2.444e-07
+cat("Diperoleh p_value =", p_value, "\n\n")
+cat("4) Daerah Kritik", "\n")
+cat("H0 ditolak saat p_value < Alpha", "\n\n")
+cat("5) Kesimpulan", "\n")
+if (p_value < Alpha) {
+  cat("Berdasarkan hasil perhitungan, didapatkan p_value sebesar", p_value, "dan dengan melihat daerah kritik H0 ditolak saat p_value < Alpha, maka H0 ditolak. Demikian dapat disimpulkan bahwa sesudah > sebelum atau pelatihan meningkatkan skor kemampuan")
+} else {
+  cat("Berdasarkan hasil perhitungan, didapatkan p_value sebesar", p_value, "dan dengan melihat daerah kritik H0 ditolak saat p_value < Alpha, maka H0 tidak ditolak. Demikian dapat disimpulkan bahwa sesudah <= sebelum atau pelatihan tidak meningkatkan skor kemampuan")
+}
+```
+

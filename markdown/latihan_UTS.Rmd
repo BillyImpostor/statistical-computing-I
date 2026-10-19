@@ -1,0 +1,125 @@
+---
+title: "Latihan UTS Komputasi Statistika"
+author: "Cheisa Billy Putra Antoni"
+date: "2026-09-15"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r}
+# Distribusi Bernoulli
+dbinom(x = 1, size = 1, prob = 0.3)
+pbinom(q = 1, size = 1, prob = 0.3)
+qbinom(p = 1, size = 1, prob = 0.3)
+rbinom(n = 20, size = 1, prob = 0.3)
+```
+
+```{r}
+# Distribusi Binomial
+dbinom(x = 1, size = 5, prob = 0.3)
+pbinom(q = 1, size = 5, prob = 0.3)
+qbinom(p = 1, size = 5, prob = 0.3)
+rbinom(n = 20, size = 5, prob = 0.3)
+```
+
+```{r}
+# Distribusi Poisson
+dpois(x = 3, lambda = 5)
+ppois(q = 3, lambda = 5)
+qpois(p = 0.3, lambda = 5)
+rpois(n = 20, lambda = 5)
+```
+
+```{r}
+# Distribuai Uniform
+dunif(x = 0.5, min = 0, max = 5)
+punif(q = 0.5, min = 0, max = 5)
+qunif(p = 0.5, min = 0, max = 5)
+runif(n = 20, min = 0, max = 5)
+```
+
+```{r}
+# Distribusi Normal
+dnorm(x = 0, mean = 0, sd = 1)
+pnorm(q = 1.96, mean = 0, sd = 1)
+qnorm(p = 0.95, mean = 65, sd = 8)
+rnorm(n = 20, mean = 0, sd = 1)
+```
+
+```{r}
+# Distribusi Eksponensial
+dexp(x = 1, rate = 2)
+pexp(q = 1, rate = 2)
+qexp(p = 0.25, rate = 2)
+rexp(n = 20, rate = 2)
+```
+
+```{r}
+# Distribusi Gamma
+dgamma(x = 1, shape = 3, rate = 5)
+pgamma(q = 2, shape = 3, rate = 5)
+qgamma(p = 0.8, shape = 3, rate = 5)
+rgamma(n = 20, shape = 3, rate = 5)
+```
+
+```{r}
+# Transformasi Linear
+set.seed(566096)
+x <- rnorm(n = 1000, mean = 10, sd = 5)
+y <- (2*x) + 5
+mean(y)
+sd(y)
+```
+
+```{r}
+# Transformasi Non-linear
+set.seed(566096)
+x <- rnorm(1000, mean = 0, sd = 1)
+y <- exp(x)
+hist(y, breaks = 30, main = "Distribusi Log-Normal Standar")
+```
+
+```{r}
+# Tranfromasi Invers Via Uniform
+set.seed(566096)
+u <- runif(n = 1000)
+lambda <- 2
+x <- log(1 - u) / - lambda
+hist(x, breaks = 30, freq = FALSE, main = "Eksponensial Via Invers")
+curve(dexp(x, rate = lambda), add = TRUE, col = "red")
+```
+
+```{r}
+# Uji Inferensi Mean 1 Populasi
+df <- c(32, 33, 30, 33, 35, 36, 34, 34, 37)
+
+library(BSDA)
+z.test(df, mu = 35, sigma.x = 5, alternative = "two.sided")
+
+t.test(df, mu = 35, alternative = "two.sided")
+```
+
+```{r}
+# Uji Inferensi Mean 2 Populasi Independen
+dfx <- c(32, 33, 30, 33, 35, 36, 34, 34, 37)
+dfy <- c(33, 30, 29, 28, 29, 27, 30, 28, 31)
+
+library(BSDA)
+z.test(dfx, dfy, mu = 0, sigma.x = 5, sigma.y = 4, alternative = "two.sided")
+
+var.test(dfx, dfy)
+t.test(dfx, dfy, mu = 0, var.equal = TRUE, alternative = "two.sided")
+
+t.test(dfx, dfy, mu = 0, var.equal = FALSE, alternative = "two.sided")
+```
+
+```{r}
+# Uji Inferensi Mean 2 Populasi Dependen
+dfx <- c(32, 33, 30, 33, 35, 36, 34, 34, 37)
+dfy <- c(33, 30, 29, 28, 29, 27, 30, 28, 31)
+
+t.test(dfx, dfy, mu = 0, paired = TRUE, alternative = "two.sided")
+```
+
+

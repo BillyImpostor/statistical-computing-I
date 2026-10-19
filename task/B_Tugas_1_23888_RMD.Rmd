@@ -1,0 +1,509 @@
+---
+title: "Tugas 1 Praktikum Komputasi Statistika I"
+author: "Cheisa Billy Putra Antoni"
+date: "2026-09-22"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+# SOAL NOMOR 1
+## SOAL NOMOR 1 A
+```{r}
+# Impor Data
+library(readxl)
+library(tidyr)
+df1 <- read_xlsx("../data/Data Nomer 1.xlsx")
+
+# Perbaiki format pemisah
+df1 <- df1 %>%
+  separate("Serangan ke_nama monster(lama serangan,nilai kerusakan)", into = c("serangan_ke", "nama_monster(lama serangan,nilai kerusakan)"), sep = "_", extra = "merge") %>%
+  separate("nama_monster(lama serangan,nilai kerusakan)", into = c("nama_monster", "lama_serangan", "nilai_kerusakan"), sep = "[(),]", extra = "drop", convert = TRUE)
+
+# Ubah tipe data
+df1$serangan_ke <- as.integer(df1$serangan_ke)
+head(df1)
+```
+
+```{r}
+# Cek NA & duplikat
+sum(is.na(df1))
+sum(duplicated(df1))
+```
+
+```{r}
+# Nilai mean setiap kolom by nama monster
+library(dplyr)
+df1_mean <- df1 %>%
+  group_by(nama_monster) %>%
+  summarise(
+    mean_lama_serangan = mean(lama_serangan),
+    mean_nilai_kerusakan = mean(nilai_kerusakan)
+  )
+head(df1_mean)
+```
+
+## SOAL NOMOR 2 B
+```{r}
+# Bangkitkan data mentah
+set.seed(23888)
+n <- 100
+waktu_raw <- rnorm(n, mean = 2, sd = 0.8)
+damage_raw <- rgamma(n, shape = 2, scale = 2) + 2
+
+# Logika aturan
+waktu_serangan <- pmax(waktu_raw, 0.5) # Batas minimal waktu serangan 0.5 detik
+poin_kerusakan <- pmax(damage_raw, 2) # Batas minimal poin kerusakan 2
+waktu_serangan <- pmin(waktu_serangan, 3.0) # Batas maksimal waktu serangan 3.0 detik
+kerusakan_tambahan <- ifelse(waktu_serangan > 3.0, waktu_serangan - 3.0, 0) # Kerusakan tambahan jika waktu serangan > 3.0 detik
+poin_kerusakan <- pmax(damage_raw, 2) + kerusakan_tambahan # Total kerusakan (poin kerusakan min 2 + kerusakan tambahan)
+
+# Pembulatan 1 angka di belakang koma
+waktu_serangan <- round(waktu_serangan, 1)
+poin_kerusakan <- round(poin_kerusakan, 1)
+
+# Membuat data frame
+df1_hero <- data.frame(
+  Waktu_Serangan = waktu_serangan,
+  Poin_Kerusakan = poin_kerusakan
+)
+head(df1_hero)
+summary(df1_hero)
+```
+
+## SOAL NOMOR 1 C
+```{r}
+# Aturan sturges
+n <- nrow(df1_hero)
+k <- round(1 + 3.3 * log10(n))
+k
+```
+
+```{r}
+# Membuat histogram kolom Waktu_Serangan
+x1 <- df1_hero$Waktu_Serangan
+breaks1 <- seq(min(x1), max(x1), length.out = k + 1)
+counts1 <- table(cut(x1, breaks = breaks1, include.lowest = TRUE))
+
+# Kanvas kosong & window
+plot.new()
+plot.window(xlim = c(min(breaks1), max(breaks1)), ylim = c(0, max(counts1) * 1.1))
+
+# Elemen visual canvas
+grid(nx = NULL, ny = NULL, col = "lightgray", lty = "dotted")
+axis(1, at = round(breaks1, 1))
+axis(2)
+box()
+title(main = "Histogram Waktu Serangan", xlab = "Waktu (detik)", ylab = "Frekuensi")
+
+# Menggambar batang dengan rect()
+for (i in 1:k) {
+  rect(xleft = breaks1[i], ybottom = 0, 
+       xright = breaks1[i+1], ytop = counts1[i], 
+       col = "skyblue", border = "black")
+}
+```
+
+```{r}
+# Membuat histogram kolom Poin_Kerusakan
+x2 <- df1_hero$Poin_Kerusakan
+breaks2 <- seq(min(x2), max(x2), length.out = k + 1)
+counts2 <- table(cut(x2, breaks = breaks2, include.lowest = TRUE))
+
+# Kanvas kosong & window
+plot.new()
+plot.window(xlim = c(min(breaks2), max(breaks2)), ylim = c(0, max(counts2) * 1.1))
+
+# Elemen visual canvas
+grid(nx = NULL, ny = NULL, col = "lightgray", lty = "dotted")
+axis(1, at = round(breaks2, 1))
+axis(2)
+box()
+title(main = "Histogram Poin Kerusakan", xlab = "Damage", ylab = "Frekuensi")
+
+# Menggambar batang dengan rect()
+for (i in 1:k) {
+  rect(xleft = breaks2[i], ybottom = 0, 
+       xright = breaks2[i+1], ytop = counts2[i], 
+       col = "skyblue", border = "black")
+}
+```
+
+## SOAL NOMOR 1 D
+```{r}
+# 1. Ambil data Bearding dari df1 & data Hero dari df1_hero
+b_df <- df1[df1$nama_monster == "Bearnadi", ]
+
+# 2. Gabung & urutkan kronologi serangan (Events)
+ev <- rbind(
+  data.frame(w = cumsum(df1_hero$Waktu_Serangan), p = "Hero", d = df1_hero$Poin_Kerusakan),
+  data.frame(w = cumsum(b_df$lama_serangan), p = "Bearding", d = b_df$nilai_kerusakan)
+)
+ev <- ev[order(ev$w), ]
+
+# 3. Simulasi pengurangan HP
+hp_h <- 100; hp_b <- 100; t_vec <- 0; h_vec <- 100; b_vec <- 100
+
+for (i in 1:nrow(ev)) {
+  if (hp_h <= 0 || hp_b <= 0) break
+  if (ev$p[i] == "Hero") hp_b <- hp_b - ev$d[i] else hp_h <- hp_h - ev$d[i]
+  t_vec <- c(t_vec, ev$w[i]); h_vec <- c(h_vec, hp_h); b_vec <- c(b_vec, hp_b)
+}
+
+# 4. Canvas Plot (Low-Level)
+plot.new()
+plot.window(xlim = c(0, max(t_vec)), ylim = c(min(h_vec, b_vec), 100))
+grid(); axis(1); axis(2); box()
+title(main = "Dinamika Penurunan HP: Hero vs Bearding", xlab = "Waktu (s)", ylab = "HP")
+lines(t_vec, h_vec, type = "s", col = "blue", lwd = 2)
+lines(t_vec, b_vec, type = "s", col = "red", lwd = 2)
+legend("topright", legend = c("HP Hero", "HP Bearding"), col = c("blue", "red"), lty = 1, lwd = 2)
+```
+
+# SOAL NOMOR 2
+## SOAL NOMOR 2 A
+```{r}
+# Impor data csv
+data_pelanggan <- read.csv("../data/data_pelanggan.csv")
+data_produk <- read.csv("../data/data_produk.csv")
+transaksi_2024_01 <- read.csv("../data/transaksi_2024-01.csv")
+transaksi_2024_02 <- read.csv("../data/transaksi_2024-02.csv")
+transaksi_2024_03 <- read.csv("../data/transaksi_2024-03.csv")
+transaksi_2024_04 <- read.csv("../data/transaksi_2024-04.csv")
+transaksi_2024_05 <- read.csv("../data/transaksi_2024-05.csv")
+transaksi_shopee <- read.csv("../data/transaksi_shopee.csv")
+transaksi_tokopedia <- read.csv("../data/transaksi_tokopedia.csv")
+transaksi_tiktok_shop <- read.csv("../data/transaksi_tiktok_shop.csv")
+```
+
+```{r}
+# Gabungkan data transaksi
+gabung_tx <- rbind(
+  transaksi_2024_01, transaksi_2024_02, transaksi_2024_03, 
+  transaksi_2024_04, transaksi_2024_05, transaksi_shopee, 
+  transaksi_tokopedia, transaksi_tiktok_shop
+)
+head(gabung_tx)
+```
+
+```{r}
+# Data duplikat & NA berdasarkan ID Transaksi pada data transaksi (gabungan)
+cat("Total baris transaksi awal (gabungan):", nrow(gabung_tx), "\n")
+cat("Jumlah ID_Transaksi unik             :", length(unique(gabung_tx$ID_Transaksi)), "(Aman)", "\n")
+cat("Jumlah hanya ID_Transaksi duplikat   :", sum(duplicated(gabung_tx$ID_Transaksi))-sum(duplicated(gabung_tx)), "(Perbaiki)", "\n")
+cat("Jumlah baris duplikat                :", sum(duplicated(gabung_tx)), "(Drop)", "\n\n")
+cat("Jumlah NA pada Data Transaksi:\n")
+gabung_tx[gabung_tx == ""] <- NA
+print(colSums(is.na(gabung_tx)))
+```
+
+```{r}
+# Data duplikat & NA berdasarkan Kode Transaksi pada data produk
+cat("Total baris data produk               :", nrow(data_produk), "\n")
+cat("Jumlah Kode_Transaksi unik            :", length(unique(data_produk$Kode_Transaksi)), "(Aman)", "\n")
+cat("Jumlah hanya Kode_Transaksi duplikat  :", sum(duplicated(data_produk$Kode_Transaksi))-sum(duplicated(data_produk)), "(Perbaiki)", "\n")
+cat("Jumlah baris duplikat                 :", sum(duplicated(data_produk)), "(Drop)", "\n\n")
+cat("\nJumlah NA pada Data Produk          :\n")
+data_produk[data_produk == ""] <- NA
+print(colSums(is.na(data_produk)))
+```
+
+```{r}
+# Data duplikat & NA berdasarkan No Transaksi pada data pelanggan
+cat("Total baris data pelanggan          :", nrow(data_pelanggan), "\n")
+cat("Jumlah No_Transaksi unik            :", length(unique(data_pelanggan$No_Transaksi)), "(Aman)", "\n")
+cat("Jumlah hanya No_Transaksi duplikat  :", sum(duplicated(data_pelanggan$No_Transaksi))-sum(duplicated(data_pelanggan)), "(Perbaiki)", "\n")
+cat("Jumlah baris duplikat               :", sum(duplicated(data_pelanggan)), "(Drop)", "\n\n")
+cat("\nJumlah NA pada Data Pelanggan     :\n")
+data_pelanggan[data_pelanggan == ""] <- NA
+print(colSums(is.na(data_pelanggan)))
+```
+
+```{r}
+# Cek penulisan Marketplace, Status_Pesanan, dan format Tanggal pada data transaksi
+cat("Variasi penulisan Marketplace:\n")
+print(table(gabung_tx$Marketplace, useNA = "always"))
+cat("\nVariasi penulisan Status_Pesanan:\n")
+print(table(gabung_tx$Status_Pesanan, useNA = "always"))
+cat("\n")
+cat("\nVariasi penulisan format Tanggal:\n")
+head(unique(gabung_tx$Tanggal), 10)
+```
+
+```{r}
+# Struktur tabel & tipe data produk
+str(data_produk)
+
+# Spasi berlebih Nama Produk pada data produk
+cat("\nSampel Nama_Produk dengan spasi ganda:\n")
+print(head(data_produk$Nama_Produk[grep("\\s{2,}", data_produk$Nama_Produk)], 5))
+
+# Huruf "O" menjadi angka 0 pada data produk
+cat("\nSampel Nama_Produk dengan typo angka '0' (harus huruf 'O'):\n")
+print(unique(data_produk$Nama_Produk[grep("0", data_produk$Nama_Produk)]))
+
+# Konsistensi huruf kapital Nama Produk pada data produk
+cat("\nSampel variasi kapitalisasi Nama_Produk:\n")
+print(head(data_produk$Nama_Produk[data_produk$Nama_Produk != tolower(data_produk$Nama_Produk)], 5))
+
+# Format teks 'Rp' dan koma Harga Satuan pada data produk
+cat("\nSampel data Harga_Satuan dengan variasi teks 'Rp':\n")
+print(head(data_produk$Harga_Satuan, 5))
+
+# Ringkasan Statistik dan Nilai Negatif Qty pada data produk
+cat("\nRingkasan Statistik Qty:\n")
+summary(data_produk$Qty)
+cat("\nJumlah Qty bernilai negatif:", sum(data_produk$Qty < 0), "\n")
+```
+
+```{r}
+# Struktur tabel & tipe data pelanggan
+str(data_pelanggan)
+
+# Nama yang memiliki 2 spasi atau lebih di tengah kata pada data pelanggan
+pelanggan_spasi <- data_pelanggan$Nama_Pelanggan[grep("\\s{2,}", data_pelanggan$Nama_Pelanggan)]
+cat("Contoh Nama Pelanggan dengan spasi ganda:\n")
+print(head(pelanggan_spasi, 3))
+
+# Huruf "O" menjadi angka 0 pada data pelanggan
+cat("\nSampel Nama_Pelanggan dengan typo angka '0' (harus huruf 'O'):\n")
+print(unique(data_pelanggan$Nama_Pelanggan[grep("0", data_pelanggan$Nama_Pelanggan)]))
+
+# Konsistensi huruf kapital Nama Pelanggan pada data pelanggan
+cat("\nSampel variasi kapitalisasi Nama_Pelanggan:\n")
+print(head(data_pelanggan$Nama_Pelanggan[data_pelanggan$Nama_Pelanggan != tolower(data_pelanggan$Nama_Pelanggan)], 5))
+
+# Konsistensi nomor HP pada data pelanggan
+cat("\nSampel variasi awalan No_HP pada data pelanggan:\n")
+awalan_hp <- unique(substr(data_pelanggan$No_HP, 1, 3))
+print(awalan_hp)
+cat("\nJumlah No_HP tidak valid (mengandung 'NOH'):\n")
+print(sum(grepl("NOH", data_pelanggan$No_HP, ignore.case = TRUE), na.rm = TRUE))
+```
+
+## SOAL NOMOR 2 B
+```{r}
+# Hapus baris duplikat, standarisasi marketplace, dan standarisasi status pesanan pada data transaksi
+tx_clean <- gabung_tx[!duplicated(gabung_tx), ]
+tx_clean$Marketplace[grep("shopee", tx_clean$Marketplace, ignore.case = TRUE)] <- "Shopee"
+tx_clean$Marketplace[grep("toko", tx_clean$Marketplace, ignore.case = TRUE)] <- "Tokopedia"
+tx_clean$Marketplace[grep("tik", tx_clean$Marketplace, ignore.case = TRUE)] <- "TikTok Shop"
+tx_clean$Status_Pesanan[grep("selesai|complete", tx_clean$Status_Pesanan, ignore.case = TRUE)] <- "Selesai"
+tx_clean$Status_Pesanan[grep("dibatalkan", tx_clean$Status_Pesanan, ignore.case = TRUE)] <- "Dibatalkan"
+tx_clean$Status_Pesanan[grep("diproses", tx_clean$Status_Pesanan, ignore.case = TRUE)] <- "Diproses"
+```
+
+```{r}
+# Perbaikan format tanggal ke YYYY-MM-DD data transaksi
+library(lubridate)
+library(stringr)
+bulan_indo <- c("Januari"="Jan", "Februari"="Feb", "Maret"="Mar", "April"="Apr", 
+                "Mei"="May", "Juni"="Jun", "Juli"="Jul", "Agustus"="Aug", 
+                "September"="Sep", "Oktober"="Oct", "November"="Nov", "Desember"="Dec")
+tx_clean$Tanggal <- as.Date(parse_date_time(str_replace_all(tx_clean$Tanggal, bulan_indo), orders = c("dmy", "ymd")))
+```
+
+```{r}
+# Hapus baris duplikat, bersihkan spasi, perbaiki huruf "O", konsistensi kapital, bersihkan teks 'Rp' & koma, ubah nilai negatif pada QTY, lalu hitung ulang Total_Harga pada data produk
+library(tools)
+produk_clean <- data_produk[!duplicated(data_produk), ]
+produk_clean$Nama_Produk  <- trimws(gsub("\\s+", " ", produk_clean$Nama_Produk))
+produk_clean$Nama_Produk <- gsub("0", "o", produk_clean$Nama_Produk)
+produk_clean$Nama_Produk  <- toTitleCase(tolower(produk_clean$Nama_Produk))
+produk_clean$Harga_Satuan <- as.numeric(gsub("[^0-9]", "", produk_clean$Harga_Satuan))
+produk_clean$Qty <- abs(produk_clean$Qty)
+produk_clean$Total_Harga  <- produk_clean$Harga_Satuan * produk_clean$Qty
+```
+
+```{r}
+# Hapus baris duplikat, bersihkan spasi ganda nama, perbaiki huruf "O", konsistensi kapital, dan standarisasi nomor HP (pakai 08...) + NA kan nomor yang tidak valid pada data pelanggan
+library(tools)
+pelanggan_clean <- data_pelanggan[!duplicated(data_pelanggan), ]
+pelanggan_clean$Nama_Pelanggan <- trimws(gsub("\\s+", " ", pelanggan_clean$Nama_Pelanggan))
+pelanggan_clean$Nama_Pelanggan <- gsub("0", "o", pelanggan_clean$Nama_Pelanggan)
+pelanggan_clean$Nama_Pelanggan <- toTitleCase(tolower(pelanggan_clean$Nama_Pelanggan))
+pelanggan_clean$No_HP[grepl("[A-Za-z]", pelanggan_clean$No_HP)] <- NA
+pelanggan_clean$No_HP <- sub("^(\\+?628|0?8)", "08", pelanggan_clean$No_HP)
+```
+
+## SOAL NOMOR 2 C
+```{r}
+# FUNCTION UNTUK KEPERLUAN CEK DUPLIKASI ID_TRANSAKSI
+cek_urutan_id <- function(kolom_id, prefix = "TRX") {
+  # 1. Ambil angka murni dari data
+  raw_id <- na.omit(as.character(kolom_id))
+  nums   <- as.numeric(gsub("[^0-9]", "", raw_id))
+  if (length(nums) == 0) return("Data kosong atau format ID tidak valid.")
+  # 2. Cari ID yang hilang dari deret ideal (min ke max)
+  ideal   <- min(nums):max(nums)
+  hilang  <- setdiff(ideal, nums)
+  # 3. Evaluasi kelengkapan & urutan
+  if (length(hilang) > 0) {
+    pad <- nchar(gsub("[^0-9]", "", raw_id[1]))
+    id_missing <- paste0(prefix, sprintf(paste0("%0", pad, "d"), hilang))
+    return(paste0("Kolom tidak urut/tidak lengkap! Ada ", length(hilang), 
+                  " ID tertinggal: ", paste(id_missing, collapse = ", ")))
+  }
+  if (is.unsorted(nums)) {
+    return("Seluruh ID lengkap, tetapi posisi di tabel belum terurut (perlu di-sort).")
+  }
+  paste0("Kolom sudah urut dan lengkap dari ", prefix, min(nums), " sampai ", prefix, max(nums), ".")
+}
+```
+
+```{r}
+# Merge seluruh dataset
+library(dplyr)
+tabel_akhir <- tx_clean %>%
+  mutate(id_ke = row_number(), .by = ID_Transaksi) %>%
+  left_join(produk_clean %>% mutate(id_ke = row_number(), .by = Kode_Transaksi), 
+            by = c("ID_Transaksi" = "Kode_Transaksi", "id_ke")) %>%
+  left_join(pelanggan_clean %>% mutate(id_ke = row_number(), .by = No_Transaksi), 
+            by = c("ID_Transaksi" = "No_Transaksi", "id_ke")) %>%
+
+# Penyesuaian tipe data tiap kolom
+mutate(
+    ID_Transaksi   = as.character(ID_Transaksi),
+    Tanggal        = as.Date(Tanggal),
+    Marketplace    = as.factor(Marketplace),
+    Nama_Produk    = as.character(Nama_Produk),
+    Kategori       = as.factor(Kategori),
+    Harga_Satuan   = as.numeric(Harga_Satuan),
+    Qty            = as.integer(Qty),
+    Total_Harga    = as.numeric(Total_Harga),
+    Nama_Pelanggan = as.character(Nama_Pelanggan),
+    No_HP          = as.character(No_HP),
+    Status_Pesanan = as.factor(Status_Pesanan),
+    Metode_Bayar   = as.factor(Metode_Bayar)
+  ) %>%
+
+# Pilih variabel wajib saja & urutkan berdasarkan ID_Transaksi (Ascending)
+select(
+    ID_Transaksi, Tanggal, Marketplace, Nama_Produk, 
+    Kategori, Harga_Satuan, Qty, Total_Harga, 
+    Nama_Pelanggan, No_HP, Status_Pesanan, Metode_Bayar
+  ) %>%
+  arrange(ID_Transaksi)
+```
+
+```{r}
+# Data duplikat, ID_Transaksi yang belum ada, NA berdasarkan ID Transaksi, dan nilai unik Nama Produk & Kategori pada tabel akhir
+cat("Total baris tabel akhir             :", nrow(tabel_akhir), "\n")
+cat("Jumlah ID_Transaksi unik            :", length(unique(tabel_akhir$ID_Transaksi)), "\n")
+cat("Jumlah hanya ID_Transaksi duplikat  :", sum(duplicated(tabel_akhir$ID_Transaksi)), "\n\n")
+cat("\nJumlah NA pada Tabel Akhir:\n")
+print(colSums(is.na(tabel_akhir)))
+cat("\nHasil cek kolom ID_Transaksi:\n")
+cek_urutan_id(tabel_akhir$ID_Transaksi)
+cat("\nNilai unik pada kolom Nama_Produk:\n")
+unique(tabel_akhir$Nama_Produk)
+cat("\nNilai unik pada kolom Kategori:\n")
+unique(tabel_akhir$Kategori)
+```
+
+```{r}
+# Ganti ID_Transaksi duplikat menggunakan ID_Transaksi yang belum ada
+which(duplicated(tabel_akhir$ID_Transaksi))
+tabel_akhir$ID_Transaksi[13] <- "TRX1062"
+tabel_akhir$ID_Transaksi[15] <- "TRX1063"
+tabel_akhir$ID_Transaksi[24] <- "TRX1064"
+tabel_akhir$ID_Transaksi[25] <- "TRX1085"
+tabel_akhir$ID_Transaksi[30] <- "TRX1098"
+tabel_akhir$ID_Transaksi[33] <- "TRX1135"
+```
+
+```{r}
+# Sesuaikan kategori berdasarkan nama produknya
+library(dplyr)
+tabel_akhir <- tabel_akhir %>%
+  mutate(
+    Kategori = case_when(
+      Nama_Produk %in% c("Celana Jeans", "Rok Plisket", "Celana Chino") ~ "Bawahan",
+      Nama_Produk %in% c("Sweater Rajut", "Blazer Wanita", "Jaket Hoodie") ~ "Outerwear",
+      Nama_Produk %in% c("Dress Motif", "Kemeja Flanel", "Kaos Polos", "Kaos Oblong") ~ "Atasan",
+      TRUE ~ as.character(Kategori)
+    ),
+    Kategori = factor(Kategori, levels = c("Atasan", "Bawahan", "Outerwear"))
+  )
+head(tabel_akhir)
+```
+
+
+## SOAL NOMOR 2 E
+```{r}
+# Ekspor data dengan formar csv
+write.csv(tabel_akhir, "data_penjualan_clean.csv", row.names = FALSE)
+data_penjualan_clean <- read.csv("data_penjualan_clean.csv")
+head(data_penjualan_clean)
+```
+
+# SOAL NOMOR 3
+# SOAL NOMOR 3 B
+```{r}
+# Perhitungan nilai fungsi invers di u = 0.85
+a <- 1.2
+b <- 0.8
+g <- 0.5
+u <- 0.85
+x <- -(1/g) * log(1 - (1 - exp(-g)) * ((-log(1 - u))/a)^(1/b))
+x
+```
+
+# SOAL NOMOR 3 C
+```{r}
+# Pembuatan function generator bilangan acak
+rowig <- function(n, alpha, beta, gamma) {
+  u <- runif(n)
+  x <- -(1 / gamma) * log(1 - (1 - exp(-gamma)) * ((-log(1 - u)) / alpha)^(1 / beta))
+  return(x)
+}
+# Pembangkitan bilangan acak
+set.seed(23888)
+n <- (88 * 10) + 96
+alpha <- 1 + (6 / 10)
+beta <- 0.5 + (0 / 10)
+gamma <- 0.2 + (9 / 10)
+random <- rowig(n = n, alpha = alpha, beta = beta, gamma = gamma)
+```
+
+```{r}
+# Histogram
+hist(random,
+     breaks = 30,
+     col = "skyblue",
+     border = "black",
+     main = "Histogram Distribusi Waktu Tunggu Pelanggan",
+     xlab = "Waktu Tunggu (Menit)",
+     ylab = "Frekuensi",
+     probability = TRUE)
+
+# Rata-rata waktu tunggu pelanggan
+mean(random, na.rm = TRUE)
+```
+
+# SOAL NOMOR 3 D
+```{r}
+# Perhitungan probabilitas teoretis P(X > 19) menggunakan CDF
+x_limit <- 19
+cdf_19 <- 1 - exp(-alpha * ((1 - exp(-gamma * x_limit)) / (1 - exp(-gamma)))^beta)
+p_teoretis <- 1 - cdf_19
+cat("Probabilitas Teoretis P(X > 19)     :", sprintf("%.6f", p_teoretis), "\n")
+
+# Menghitung proporsi data simulasi yang bernilai > 19
+p_empiris <- mean(random > 19, na.rm = TRUE)
+cat("Estimasi Probabilitas Dari Simulasi :", sprintf("%.6f", p_empiris), "\n")
+```
+
+# SOAL NOMOR 3 E
+```{r}
+# Hitung median teoretis menggunakan u = 0.5
+median_teoretis <- -(1 / gamma) * log(
+  1 - (1 - exp(-gamma)) * ((-log(1 - 0.5)) / alpha)^(1 / beta)
+)
+cat("Median Teoretis :", round(median_teoretis, 5), "menit\n")
+
+# Hitung median sampel dari data simulasi
+median_sampel <- median(random, na.rm = TRUE)
+cat("Median Sampel   :", round(median_sampel, 5), "menit\n")
+```
+

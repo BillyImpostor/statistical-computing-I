@@ -1,0 +1,151 @@
+"ID_Transaksi","Tanggal","Marketplace","Nama_Produk","Kategori","Harga_Satuan","Qty","Total_Harga","Nama_Pelanggan","No_HP","Status_Pesanan","Metode_Bayar"
+"TRX1001",2024-01-07,"Shopee","Dress Motif","Atasan",75000,1,75000,"Wulan Sari","08250165258","Selesai",NA
+"TRX1002",2024-03-12,"Shopee","Celana Jeans","Bawahan",50000,1,50000,"Fajar Nugroho","08419026831","Selesai",NA
+"TRX1003",2024-03-15,"Tokopedia","Kemeja Flanel","Atasan",50000,9999,499950000,"Fajar Nugroho","08966171396","Diproses","QRIS"
+"TRX1004",2024-01-09,"Tokped","Sweater Rajut","Outerwear",50000,2,1e+05,"Bayu Pratama","08861175745","Selesai","Transfer Bank"
+"TRX1005",2024-01-24,"Tokped","Kaos Polos","Atasan",75000,2,150000,"Indah Permata","08259618773","Dibatalkan","Transfer Bank"
+"TRX1006",2024-03-08,"Tokopedia","Kaos Oblong","Atasan",150000,1,150000,"Rina Marlina","08319995413","Selesai","QRIS"
+"TRX1007",2024-05-25,"TikTok Shop","Kemeja Flanel","Atasan",50000,2,1e+05,"Yusuf Hidayat","08976736384","Selesai","QRIS"
+"TRX1008",2024-05-30,"Shopee","Kaos Oblong","Atasan",75000,1,75000,"Agus Rahman","08262195478","Selesai","QRIS"
+"TRX1009",2024-03-31,"Shopee","Rok Plisket","Bawahan",199000,1,199000,"Budi Santoso","08151148088","Selesai",NA
+"TRX1010",2024-01-04,"Shopee","Kemeja Flanel","Atasan",75000,9999,749925000,"Agus Rahman",NA,"Selesai","COD"
+"TRX1011",2024-01-15,"Shopee","Blazer Wanita","Outerwear",50000,5,250000,"Wulan Sari","08008495500","Diproses","Transfer Bank"
+"TRX1012",2024-03-21,"Shopee","Jaket Hoodie","Outerwear",75000,3,225000,"Budi Santoso","08551302245","Selesai",NA
+"TRX1062",2024-04-30,"Tokped","Kaos Oblong","Atasan",89000,2,178000,"Indah Permata","08431144647",NA,"QRIS"
+"TRX1013",2024-01-11,"TikTok Shop","Kemeja Flanel","Atasan",50000,1,50000,"Dewi Lestari","08685290680","Selesai",NA
+"TRX1063",2024-03-17,"TikTok Shop","Sweater Rajut","Outerwear",120000,1,120000,"Agus Rahman","08138783944","Selesai",NA
+"TRX1014",2024-02-11,"Shopee","Celana Chino","Bawahan",150000,1,150000,NA,NA,"Selesai","Transfer Bank"
+"TRX1015",2024-02-15,"Tokopedia","Rok Plisket","Bawahan",199000,5,995000,"Indah Permata","08173041938","Selesai","QRIS"
+"TRX1016",2024-04-12,"TikTok Shop","Sweater Rajut","Outerwear",89000,5,445000,"Indah Permata","08191921473","Dibatalkan",NA
+"TRX1017",2024-01-12,"TikTok Shop","Rok Plisket","Bawahan",150000,2,3e+05,"Budi Santoso",NA,"Selesai",NA
+"TRX1018",2024-04-13,"Tokped","Kaos Oblong","Atasan",89000,3,267000,"Bayu Pratama","08657976266","Selesai",NA
+"TRX1019",2024-02-20,"Tokopedia","Celana Jeans","Bawahan",75000,1,75000,"Budi Santoso","08642607714",NA,"QRIS"
+"TRX1020",2024-02-01,"TikTok Shop","Celana Chino","Bawahan",199000,5,995000,"Yusuf Hidayat","08418478274","Diproses","Kartu Kredit"
+"TRX1021",2024-02-13,"Shopee","Jaket Hoodie","Outerwear",89000,1,89000,"Agus Rahman",NA,"Selesai","Transfer Bank"
+"TRX1064",2024-03-14,"Tokopedia","Blazer Wanita","Outerwear",50000,9999,499950000,"Agus Rahman","08872706517","Selesai","COD"
+"TRX1085",2024-04-21,"TikTok Shop","Jaket Hoodie","Outerwear",150000,3,450000,"Budi Santoso","08590757115","Selesai",NA
+"TRX1022",2024-04-09,"TikTok Shop","Rok Plisket","Bawahan",150000,2,3e+05,"Rina Marlina","08641416035","Selesai",NA
+"TRX1023",2024-04-28,"Tokopedia","Celana Jeans","Bawahan",120000,5,6e+05,"Fajar Nugroho","08200593676","Selesai","Transfer Bank"
+"TRX1024",2024-02-09,"Shopee","Jaket Hoodie","Outerwear",199000,1,199000,"Agus Rahman",NA,"Selesai","QRIS"
+"TRX1025",2024-03-03,"TikTok Shop","Kemeja Flanel","Atasan",199000,1,199000,NA,"08353881968","Dibatalkan","Transfer Bank"
+"TRX1098",2024-04-05,"Shopee","Dress Motif","Atasan",89000,1,89000,"Budi Santoso",NA,"Diproses","Transfer Bank"
+"TRX1026",2024-03-10,"Shopee","Blazer Wanita","Outerwear",120000,1,120000,"Bayu Pratama","08824630812","Diproses","COD"
+"TRX1027",2024-03-11,"Tokped","Kaos Oblong","Atasan",75000,1,75000,"Indah Permata","08740242635","Dibatalkan",NA
+"TRX1135",2024-04-27,"TikTok Shop","Kemeja Flanel","Atasan",150000,1,150000,"Bayu Pratama","08624609055","Dibatalkan","Kartu Kredit"
+"TRX1028",2024-03-31,"Shopee","Celana Chino","Bawahan",89000,2,178000,"Agus Rahman","08247952112","Diproses","QRIS"
+"TRX1029",2024-02-02,"Shopee","Dress Motif","Atasan",150000,3,450000,"Dewi Lestari","08544109484","Selesai","Transfer Bank"
+"TRX1030",2024-05-24,"Tokped","Dress Motif","Atasan",50000,9999,499950000,"Bayu Pratama","08254509076","Selesai","Transfer Bank"
+"TRX1031",2024-05-21,"Tokopedia","Kemeja Flanel","Atasan",120000,1,120000,NA,"08802275811","Selesai","COD"
+"TRX1032",2024-01-19,"Tokopedia","Kaos Polos","Atasan",150000,3,450000,"Yusuf Hidayat","08545876026","Diproses",NA
+"TRX1033",2024-01-01,"Tokped","Jaket Hoodie","Outerwear",50000,9999,499950000,"Budi Santoso",NA,"Selesai",NA
+"TRX1034",2024-03-23,"TikTok Shop","Kemeja Flanel","Atasan",150000,1,150000,"Wulan Sari","08767259461","Selesai","COD"
+"TRX1035",2024-05-21,"Tokopedia","Rok Plisket","Bawahan",50000,1,50000,"Dewi Lestari","08892539588","Dibatalkan","COD"
+"TRX1036",2024-05-09,"Tokped","Dress Motif","Atasan",89000,3,267000,"Bayu Pratama",NA,"Diproses",NA
+"TRX1037",2024-04-07,"Shopee","Rok Plisket","Bawahan",120000,1,120000,"Bayu Pratama",NA,"Selesai","COD"
+"TRX1038",2024-05-16,"Tokopedia","Rok Plisket","Bawahan",150000,1,150000,"Agus Rahman","08097711203","Diproses","COD"
+"TRX1039",2024-02-07,"Tokopedia","Jaket Hoodie","Outerwear",150000,2,3e+05,"Budi Santoso","08914220896","Selesai","Kartu Kredit"
+"TRX1040",2024-05-30,"Shopee","Dress Motif","Atasan",199000,3,597000,"Rina Marlina","08332608308",NA,"COD"
+"TRX1041",2024-02-28,"Shopee","Blazer Wanita","Outerwear",75000,2,150000,"Dewi Lestari","08703193427","Diproses","Transfer Bank"
+"TRX1042",2024-05-03,"TikTok Shop","Dress Motif","Atasan",50000,1,50000,"Dewi Lestari","08370546658","Selesai",NA
+"TRX1043",2024-01-07,"Shopee","Blazer Wanita","Outerwear",150000,2,3e+05,"Yusuf Hidayat",NA,"Selesai","Kartu Kredit"
+"TRX1044",2024-05-05,"TikTok Shop","Blazer Wanita","Outerwear",50000,5,250000,"Yusuf Hidayat","08960299802","Selesai","COD"
+"TRX1045",2024-02-02,"Shopee","Blazer Wanita","Outerwear",150000,2,3e+05,"Agus Rahman","08811216007","Diproses","QRIS"
+"TRX1046",2024-01-14,"Shopee","Celana Jeans","Bawahan",150000,1,150000,"Yusuf Hidayat",NA,"Dibatalkan","Kartu Kredit"
+"TRX1047",2024-05-05,"TikTok Shop","Celana Chino","Bawahan",89000,2,178000,"Bayu Pratama","08954607867","Dibatalkan","Kartu Kredit"
+"TRX1048",2024-04-15,"TikTok Shop","Sweater Rajut","Outerwear",120000,9999,1199880000,"Fajar Nugroho","08640047310","Selesai","Kartu Kredit"
+"TRX1049",2024-04-18,"Tokopedia","Kaos Polos","Atasan",89000,5,445000,"Wulan Sari","08351224576","Diproses","QRIS"
+"TRX1050",2024-03-20,"Shopee","Sweater Rajut","Outerwear",75000,2,150000,"Indah Permata","08724337750","Selesai","Transfer Bank"
+"TRX1051",2024-01-13,"Shopee","Kemeja Flanel","Atasan",199000,9999,1989801000,"Yusuf Hidayat","08426460350","Selesai","Transfer Bank"
+"TRX1052",2024-03-15,"TikTok Shop","Sweater Rajut","Outerwear",120000,9999,1199880000,"Indah Permata","08374403446","Selesai","Kartu Kredit"
+"TRX1053",2024-04-09,"Tokped","Kemeja Flanel","Atasan",75000,2,150000,"Dewi Lestari","08044402265",NA,"QRIS"
+"TRX1054",2024-03-06,"Tokped","Jaket Hoodie","Outerwear",75000,1,75000,"Yusuf Hidayat","08956686104","Diproses",NA
+"TRX1055",2024-05-09,"TikTok Shop","Kemeja Flanel","Atasan",120000,1,120000,"Budi Santoso","08597095165",NA,"QRIS"
+"TRX1056",2024-03-28,"TikTok Shop","Kemeja Flanel","Atasan",50000,2,1e+05,"Yusuf Hidayat",NA,"Diproses",NA
+"TRX1057",2024-02-08,"Shopee","Sweater Rajut","Outerwear",199000,2,398000,"Rina Marlina","08705631799","Dibatalkan",NA
+"TRX1058",2024-04-02,"Shopee","Dress Motif","Atasan",89000,1,89000,"Dewi Lestari",NA,"Dibatalkan","COD"
+"TRX1059",2024-03-01,"Tokopedia","Celana Chino","Bawahan",199000,1,199000,"Agus Rahman","08654775411","Diproses","QRIS"
+"TRX1060",2024-04-05,"TikTok Shop","Kaos Oblong","Atasan",50000,3,150000,"Rina Marlina","08924300529","Selesai","QRIS"
+"TRX1061",2024-01-26,"Tokped","Sweater Rajut","Outerwear",75000,1,75000,"Yusuf Hidayat","08690219647","Diproses","QRIS"
+"TRX1065",2024-04-20,"Tokped","Blazer Wanita","Outerwear",150000,3,450000,"Budi Santoso","08714479646","Selesai",NA
+"TRX1066",2024-04-03,"TikTok Shop","Kaos Oblong","Atasan",50000,2,1e+05,"Yusuf Hidayat",NA,"Diproses","Transfer Bank"
+"TRX1067",2024-01-07,"Tokopedia","Celana Jeans","Bawahan",120000,1,120000,"Rina Marlina","08941848406","Diproses",NA
+"TRX1068",2024-05-18,"Shopee","Dress Motif","Atasan",199000,2,398000,"Wulan Sari",NA,"Dibatalkan","Kartu Kredit"
+"TRX1069",2024-01-19,"Shopee","Celana Jeans","Bawahan",120000,1,120000,"Fajar Nugroho","08490111373","Selesai","COD"
+"TRX1070",2024-05-21,"Shopee","Dress Motif","Atasan",150000,1,150000,"Dewi Lestari","08693908097","Selesai",NA
+"TRX1071",2024-01-08,"Shopee","Celana Chino","Bawahan",89000,3,267000,"Indah Permata","08442637789","Diproses",NA
+"TRX1072",2024-03-22,"TikTok Shop","Jaket Hoodie","Outerwear",89000,1,89000,"Budi Santoso","08998971194",NA,"QRIS"
+"TRX1073",2024-04-10,"Tokped","Kaos Oblong","Atasan",75000,5,375000,"Yusuf Hidayat","08584877345","Diproses",NA
+"TRX1074",2024-04-08,"TikTok Shop","Kaos Oblong","Atasan",89000,1,89000,"Budi Santoso","08155013446","Diproses",NA
+"TRX1075",2024-04-10,"Tokopedia","Blazer Wanita","Outerwear",150000,5,750000,"Wulan Sari",NA,"Selesai",NA
+"TRX1076",2024-05-02,"Shopee","Celana Jeans","Bawahan",120000,2,240000,"Agus Rahman","08031647987","Selesai",NA
+"TRX1077",2024-03-24,"Tokopedia","Celana Chino","Bawahan",89000,2,178000,"Wulan Sari",NA,NA,"COD"
+"TRX1078",2024-03-11,"Tokopedia","Dress Motif","Atasan",199000,9999,1989801000,"Indah Permata","08273424259","Selesai","QRIS"
+"TRX1079",2024-05-30,"Tokped","Jaket Hoodie","Outerwear",199000,2,398000,"Siti Aminah","08619916846","Diproses","COD"
+"TRX1080",2024-01-23,"Shopee","Blazer Wanita","Outerwear",199000,1,199000,"Dewi Lestari","08717820269","Diproses","Kartu Kredit"
+"TRX1081",2024-05-19,"Tokopedia","Kaos Oblong","Atasan",150000,1,150000,"Budi Santoso","08177571888","Selesai","Kartu Kredit"
+"TRX1082",2024-02-17,"Tokopedia","Celana Jeans","Bawahan",75000,1,75000,"Agus Rahman","08706601345","Selesai",NA
+"TRX1083",2024-03-16,"TikTok Shop","Sweater Rajut","Outerwear",75000,2,150000,"Yusuf Hidayat",NA,"Diproses","QRIS"
+"TRX1084",2024-01-29,"Tokped","Kaos Polos","Atasan",150000,2,3e+05,"Dewi Lestari",NA,"Diproses",NA
+"TRX1086",2024-05-18,"Shopee","Celana Jeans","Bawahan",50000,2,1e+05,"Indah Permata","08947432411","Selesai",NA
+"TRX1087",2024-01-05,"Tokped","Jaket Hoodie","Outerwear",50000,1,50000,"Siti Aminah","08577192955","Selesai","COD"
+"TRX1088",2024-05-13,"TikTok Shop","Jaket Hoodie","Outerwear",89000,1,89000,"Bayu Pratama",NA,"Selesai","COD"
+"TRX1089",2024-02-06,"TikTok Shop","Celana Chino","Bawahan",120000,9999,1199880000,"Dewi Lestari","08043580360","Selesai",NA
+"TRX1090",2024-05-23,"Shopee","Jaket Hoodie","Outerwear",89000,3,267000,"Siti Aminah","08942629573","Diproses","COD"
+"TRX1091",2024-05-07,"Shopee","Celana Chino","Bawahan",89000,2,178000,"Indah Permata","08295413384","Diproses","Kartu Kredit"
+"TRX1092",2024-05-05,"Shopee","Celana Chino","Bawahan",75000,2,150000,"Yusuf Hidayat","08089674827","Selesai",NA
+"TRX1093",2024-01-16,"Tokopedia","Blazer Wanita","Outerwear",120000,1,120000,"Siti Aminah","08564919526","Diproses","COD"
+"TRX1094",2024-01-21,"Shopee","Sweater Rajut","Outerwear",150000,2,3e+05,"Agus Rahman","08434670863","Selesai","Transfer Bank"
+"TRX1095",2024-05-25,"Shopee","Celana Chino","Bawahan",50000,3,150000,NA,"08577301283","Dibatalkan",NA
+"TRX1096",2024-01-21,"TikTok Shop","Kaos Oblong","Atasan",50000,1,50000,"Budi Santoso","08029439466","Diproses","Transfer Bank"
+"TRX1097",2024-01-22,"Tokopedia","Dress Motif","Atasan",199000,2,398000,"Fajar Nugroho","08321145403","Diproses","Kartu Kredit"
+"TRX1099",2024-01-02,"Shopee","Rok Plisket","Bawahan",120000,5,6e+05,"Indah Permata","08392399264","Diproses","Kartu Kredit"
+"TRX1100",2024-04-10,"Tokopedia","Sweater Rajut","Outerwear",75000,2,150000,"Wulan Sari","08780876132","Dibatalkan","Kartu Kredit"
+"TRX1101",2024-05-02,"Shopee","Blazer Wanita","Outerwear",150000,9999,1499850000,"Fajar Nugroho",NA,"Selesai","QRIS"
+"TRX1102",2024-05-10,"Shopee","Kaos Oblong","Atasan",199000,2,398000,"Indah Permata","08942908733",NA,"COD"
+"TRX1103",2024-04-22,"Shopee","Celana Chino","Bawahan",89000,1,89000,"Budi Santoso","08897553447","Selesai",NA
+"TRX1104",2024-04-11,"Tokopedia","Kaos Polos","Atasan",75000,1,75000,"Indah Permata","08801813428","Dibatalkan",NA
+"TRX1105",2024-01-30,"Shopee","Sweater Rajut","Outerwear",150000,2,3e+05,"Rina Marlina","08131654131","Selesai","Kartu Kredit"
+"TRX1106",2024-02-17,"Tokped","Sweater Rajut","Outerwear",150000,1,150000,"Siti Aminah","08648400722","Selesai","Kartu Kredit"
+"TRX1107",2024-05-06,"Shopee","Kaos Oblong","Atasan",150000,1,150000,"Wulan Sari","08424762802",NA,"QRIS"
+"TRX1108",2024-03-01,"Shopee","Jaket Hoodie","Outerwear",199000,5,995000,"Bayu Pratama","08885551925","Selesai","Kartu Kredit"
+"TRX1109",2024-03-11,"Tokped","Celana Jeans","Bawahan",75000,2,150000,"Agus Rahman","08524468052",NA,"Kartu Kredit"
+"TRX1110",2024-01-01,"Tokopedia","Kemeja Flanel","Atasan",199000,5,995000,"Wulan Sari","08283554360",NA,"QRIS"
+"TRX1111",2024-02-10,"Shopee","Celana Chino","Bawahan",120000,2,240000,"Dewi Lestari","08306606774","Selesai","QRIS"
+"TRX1112",2024-01-20,"Tokped","Celana Jeans","Bawahan",150000,1,150000,"Budi Santoso","08208132388","Selesai",NA
+"TRX1113",2024-02-12,"Shopee","Celana Chino","Bawahan",199000,2,398000,"Bayu Pratama","08117347262","Selesai",NA
+"TRX1114",2024-02-22,"Tokped","Kaos Oblong","Atasan",75000,9999,749925000,"Siti Aminah",NA,"Selesai","Kartu Kredit"
+"TRX1115",2024-01-19,"TikTok Shop","Kaos Polos","Atasan",50000,3,150000,"Siti Aminah","08705623528","Dibatalkan",NA
+"TRX1116",2024-01-17,"Shopee","Dress Motif","Atasan",199000,2,398000,"Indah Permata","08661010435","Selesai","COD"
+"TRX1117",2024-03-09,"Shopee","Kemeja Flanel","Atasan",89000,9999,889911000,"Budi Santoso","08434532157","Selesai","QRIS"
+"TRX1118",2024-01-04,"TikTok Shop","Jaket Hoodie","Outerwear",89000,9999,889911000,NA,"08347203591","Dibatalkan","QRIS"
+"TRX1119",2024-03-13,"Tokopedia","Dress Motif","Atasan",150000,1,150000,"Rina Marlina","08399775719","Selesai",NA
+"TRX1120",2024-01-03,"Shopee","Sweater Rajut","Outerwear",199000,3,597000,"Wulan Sari","08202848475","Dibatalkan","QRIS"
+"TRX1121",2024-01-16,"TikTok Shop","Rok Plisket","Bawahan",75000,3,225000,"Fajar Nugroho","08429171143","Diproses","Transfer Bank"
+"TRX1122",2024-04-28,"Shopee","Dress Motif","Atasan",50000,2,1e+05,"Rina Marlina","08830235629","Dibatalkan","Kartu Kredit"
+"TRX1123",2024-05-20,"Shopee","Jaket Hoodie","Outerwear",50000,2,1e+05,"Siti Aminah",NA,"Selesai","QRIS"
+"TRX1124",2024-03-25,"Shopee","Kemeja Flanel","Atasan",50000,2,1e+05,"Indah Permata","08612128062",NA,"Kartu Kredit"
+"TRX1125",2024-05-02,"Shopee","Kaos Polos","Atasan",120000,2,240000,"Wulan Sari","08735495313","Selesai","COD"
+"TRX1126",2024-04-30,"Shopee","Kaos Oblong","Atasan",75000,2,150000,"Agus Rahman","08593991237","Selesai",NA
+"TRX1127",2024-05-25,"Tokopedia","Blazer Wanita","Outerwear",75000,1,75000,NA,"08250921798","Selesai","QRIS"
+"TRX1128",2024-02-06,"TikTok Shop","Kemeja Flanel","Atasan",89000,1,89000,"Indah Permata","08974643758","Selesai",NA
+"TRX1129",2024-02-14,"Shopee","Rok Plisket","Bawahan",75000,2,150000,"Bayu Pratama","08699259172","Selesai",NA
+"TRX1130",2024-01-23,"Shopee","Sweater Rajut","Outerwear",89000,2,178000,"Budi Santoso","08379843514","Selesai","Kartu Kredit"
+"TRX1131",2024-01-09,"Shopee","Dress Motif","Atasan",89000,1,89000,"Indah Permata","08564091811","Selesai","Kartu Kredit"
+"TRX1132",2024-05-18,"Shopee","Dress Motif","Atasan",89000,2,178000,"Bayu Pratama",NA,"Selesai","COD"
+"TRX1133",2024-04-30,"Tokopedia","Celana Chino","Bawahan",50000,9999,499950000,"Indah Permata","08422076035","Selesai","Kartu Kredit"
+"TRX1134",2024-04-17,"Shopee","Kaos Oblong","Atasan",150000,2,3e+05,"Budi Santoso","08555919491","Selesai","Transfer Bank"
+"TRX1136",2024-03-14,"Tokopedia","Kaos Oblong","Atasan",89000,9999,889911000,"Bayu Pratama","08166083279","Selesai","COD"
+"TRX1137",2024-03-18,"Tokped","Dress Motif","Atasan",199000,1,199000,"Agus Rahman","08246128778","Selesai","QRIS"
+"TRX1138",2024-05-09,"Tokped","Rok Plisket","Bawahan",150000,1,150000,"Agus Rahman",NA,NA,NA
+"TRX1139",2024-03-29,"Tokopedia","Celana Jeans","Bawahan",199000,1,199000,"Indah Permata","08662407709","Selesai","Transfer Bank"
+"TRX1140",2024-03-19,"TikTok Shop","Dress Motif","Atasan",89000,1,89000,"Yusuf Hidayat","08156836621","Diproses","COD"
+"TRX1141",2024-03-11,"TikTok Shop","Dress Motif","Atasan",75000,2,150000,"Agus Rahman","08310429475","Diproses",NA
+"TRX1142",2024-05-16,"Shopee","Celana Chino","Bawahan",150000,3,450000,"Wulan Sari","08287163037","Dibatalkan","COD"
+"TRX1143",2024-05-29,"Tokped","Dress Motif","Atasan",120000,1,120000,"Bayu Pratama",NA,"Diproses",NA
+"TRX1144",2024-01-21,"Shopee","Celana Chino","Bawahan",89000,1,89000,"Agus Rahman","08771444405","Selesai","COD"
+"TRX1145",2024-05-15,"Tokopedia","Jaket Hoodie","Outerwear",199000,2,398000,"Fajar Nugroho",NA,"Selesai","Transfer Bank"
+"TRX1146",2024-04-13,"TikTok Shop","Kaos Polos","Atasan",199000,2,398000,"Siti Aminah","08608250966","Selesai",NA
+"TRX1147",2024-04-23,"Tokopedia","Rok Plisket","Bawahan",89000,1,89000,"Agus Rahman","08662618171","Selesai","Kartu Kredit"
+"TRX1148",2024-02-21,"Tokopedia","Dress Motif","Atasan",75000,5,375000,NA,"08930698610","Selesai","COD"
+"TRX1149",2024-04-26,"TikTok Shop","Dress Motif","Atasan",50000,1,50000,"Siti Aminah","08707086134","Selesai","COD"
+"TRX1150",2024-02-16,"Shopee","Kemeja Flanel","Atasan",120000,3,360000,"Yusuf Hidayat",NA,"Diproses",NA

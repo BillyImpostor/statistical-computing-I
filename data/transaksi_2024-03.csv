@@ -1,0 +1,32 @@
+ID_Transaksi,Tanggal,Marketplace,Status_Pesanan,Metode_Bayar
+TRX1002,12/03/2024,Shopee,Selesai,
+TRX1003,2024-03-15,tokopedia,diproses,QRIS
+TRX1006,8 Maret 2024,Tokopedia,Complete,QRIS
+TRX1009,31/03/2024,shopee ,Selesai,
+TRX1012,21 Maret 2024,shopee ,Selesai,
+TRX1013,2024-03-17,TikTok Shop,SELESAI,
+TRX1021,14 Maret 2024,Tokopedia,Selesai,COD
+TRX1025,3 Maret 2024,tiktok shop,Dibatalkan,Transfer Bank
+TRX1026,2024-03-10,shopee ,diproses,COD
+TRX1027,2024-03-11,Tokped,Dibatalkan,
+TRX1028,31 Maret 2024,SHOPEE,Diproses,QRIS
+TRX1034,2024-03-23,TikTok Shop,SELESAI,COD
+TRX1050,20 Maret 2024,Shopee,SELESAI,Transfer Bank
+TRX1052,15 Maret 2024,TikTok Shop,selesai,Kartu Kredit
+TRX1054,6 Maret 2024,Tokped,Diproses,
+TRX1056,2024-03-28,TikTok Shop,Diproses,
+TRX1059,01/03/2024,Tokopedia,Diproses,QRIS
+TRX1072,22/03/2024,tiktok shop,,QRIS
+TRX1077,24 Maret 2024,tokopedia,,COD
+TRX1078,2024-03-11,tokopedia,SELESAI,QRIS
+TRX1083,16/03/2024,tiktok shop,diproses,QRIS
+TRX1108,1 Maret 2024,SHOPEE,SELESAI,Kartu Kredit
+TRX1109,11/03/2024,Tokped,,Kartu Kredit
+TRX1117,9 Maret 2024,shopee ,Selesai,QRIS
+TRX1119,13 Maret 2024,Tokopedia,Complete,
+TRX1124,25/03/2024,Shopee,,Kartu Kredit
+TRX1136,2024-03-14,tokopedia,Selesai,COD
+TRX1137,18 Maret 2024,Tokped,SELESAI,QRIS
+TRX1139,29 Maret 2024,Tokopedia,Selesai,Transfer Bank
+TRX1140,19 Maret 2024,tiktok shop,diproses,COD
+TRX1141,11 Maret 2024,tiktok shop,diproses,

@@ -1,0 +1,65 @@
+ID_Transaksi,Tanggal,Marketplace,Status_Pesanan,Metode_Bayar
+TRX1001,2024-01-07,Shopee,SELESAI,
+TRX1002,12/03/2024,Shopee,Selesai,
+TRX1008,30/05/2024,shopee ,selesai,QRIS
+TRX1009,31/03/2024,shopee ,Selesai,
+TRX1010,2024-01-04,SHOPEE,Complete,COD
+TRX1011,2024-01-15,shopee ,Diproses,Transfer Bank
+TRX1012,21 Maret 2024,shopee ,Selesai,
+TRX1014,11/02/2024,SHOPEE,SELESAI,Transfer Bank
+TRX1024,09/02/2024,SHOPEE,Complete,QRIS
+TRX1026,2024-03-10,shopee ,diproses,COD
+TRX1028,31 Maret 2024,SHOPEE,Diproses,QRIS
+TRX1029,02/02/2024,shopee ,Selesai,Transfer Bank
+TRX1037,07/04/2024,shopee ,selesai,COD
+TRX1040,30/05/2024,shopee ,,COD
+TRX1041,28 Februari 2024,Shopee,Diproses,Transfer Bank
+TRX1043,07/01/2024,shopee ,SELESAI,Kartu Kredit
+TRX1045,2 Februari 2024,Shopee,diproses,QRIS
+TRX1046,14 Januari 2024,shopee ,Dibatalkan,Kartu Kredit
+TRX1050,20 Maret 2024,Shopee,SELESAI,Transfer Bank
+TRX1051,13 Januari 2024,shopee ,Complete,Transfer Bank
+TRX1021,13 Februari 2024,shopee ,SELESAI,Transfer Bank
+TRX1057,08/02/2024,SHOPEE,Dibatalkan,
+TRX1058,2024-04-02,Shopee,Dibatalkan,COD
+TRX1025,05/04/2024,SHOPEE,Diproses,Transfer Bank
+TRX1068,2024-05-18,SHOPEE,Dibatalkan,Kartu Kredit
+TRX1069,19 Januari 2024,SHOPEE,selesai,COD
+TRX1070,2024-05-21,SHOPEE,Complete,
+TRX1071,8 Januari 2024,Shopee,diproses,
+TRX1076,2 Mei 2024,shopee ,SELESAI,
+TRX1080,2024-01-23,Shopee,Diproses,Kartu Kredit
+TRX1086,2024-05-18,Shopee,Selesai,
+TRX1090,23 Mei 2024,shopee ,Diproses,COD
+TRX1091,2024-05-07,SHOPEE,Diproses,Kartu Kredit
+TRX1092,5 Mei 2024,Shopee,Complete,
+TRX1094,2024-01-21,Shopee,Selesai,Transfer Bank
+TRX1095,25/05/2024,Shopee,Dibatalkan,
+TRX1099,2 Januari 2024,SHOPEE,diproses,Kartu Kredit
+TRX1101,2 Mei 2024,shopee ,Selesai,QRIS
+TRX1102,10 Mei 2024,SHOPEE,,COD
+TRX1103,22 April 2024,shopee ,SELESAI,
+TRX1105,30 Januari 2024,SHOPEE,SELESAI,Kartu Kredit
+TRX1107,6 Mei 2024,Shopee,,QRIS
+TRX1108,1 Maret 2024,SHOPEE,SELESAI,Kartu Kredit
+TRX1111,10/02/2024,shopee ,selesai,QRIS
+TRX1113,2024-02-12,shopee ,Selesai,
+TRX1116,17 Januari 2024,Shopee,SELESAI,COD
+TRX1117,9 Maret 2024,shopee ,Selesai,QRIS
+TRX1120,2024-01-03,SHOPEE,Dibatalkan,QRIS
+TRX1122,28 April 2024,Shopee,Dibatalkan,Kartu Kredit
+TRX1123,2024-05-20,SHOPEE,SELESAI,QRIS
+TRX1124,25/03/2024,Shopee,,Kartu Kredit
+TRX1125,2 Mei 2024,Shopee,Selesai,COD
+TRX1126,30 April 2024,Shopee,Selesai,
+TRX1129,14 Februari 2024,Shopee,SELESAI,
+TRX1130,2024-01-23,Shopee,SELESAI,Kartu Kredit
+TRX1131,9 Januari 2024,shopee ,Complete,Kartu Kredit
+TRX1132,2024-05-18,Shopee,selesai,COD
+TRX1134,17 April 2024,Shopee,Complete,Transfer Bank
+TRX1142,16/05/2024,SHOPEE,Dibatalkan,COD
+TRX1144,21 Januari 2024,SHOPEE,Selesai,COD
+TRX1150,2024-02-16,shopee ,diproses,
+TRX1099,2 Januari 2024,SHOPEE,diproses,Kartu Kredit
+TRX1076,2 Mei 2024,shopee ,SELESAI,
+TRX1132,2024-05-18,Shopee,selesai,COD

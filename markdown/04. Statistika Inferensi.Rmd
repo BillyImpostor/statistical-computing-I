@@ -1,0 +1,253 @@
+---
+title: "Untitled"
+author: "Daffa Elgo Santosa"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Uji rata-rata satu populasi
+```{r}
+library(readxl)
+data1 <- read_xlsx("C:/Users/ASUS/Downloads/Data Pertemuan 04.xlsx")
+
+# Uji Z
+library(BSDA)
+
+# Check normalitas
+boxplot(data1$hasilpanen, ylab="count", xlab='Kacang Tanah', main="Boxplot Hasil Panen Kacang Tanah (kg)")
+
+ks.test(data1$hasilpanen, "pnorm", mean(data1$hasilpanen), sd(data1$hasilpanen))
+
+# Uji Rata-Rata 1 Populasi (Uji Z)
+z.test(data1,alternative="less", mu=19500,sigma.x=10000, conf.level = 0.95)
+qnorm(0.05,lower.tail = F)
+
+zsum.test(mean.x = mean(data1$hasilpanen), mu = 19500, sigma.x = 10000, 
+          n.x = 50, conf.level = 0.95, alternative = "less")
+```
+
+```{r}
+# Kasus data tidak normal
+data2 <- c(10, 100, 500, 18.8, 67.4, 46, 56, 47, 58.9, 50.2, 25, 25)
+boxplot(data2,col="cyan",border="skyblue", main="Cek Normalitas",xlab="Mahasiswa", ylab="Waktu")
+
+library(AID)
+library(MASS)
+library(car)
+library(tidyverse)
+
+#1. Transformasi Box-cox dengan library AID
+out = boxcoxnc(data2, method = "mle", lambda = seq(-2,2,0.001), verbose = F, plot = F)
+out$lambda.hat
+#2.Transformasi Box-cox dengan library MASS
+out = boxcox(data2~1, lambda = seq(-2,2,0.0001), plotit = F)
+out$x[which.max(out$y)]
+
+#3. Transformasi Box-cox dengan library Car
+out = powerTransform(data2, family ="bcPower")
+
+out$lambda
+
+# Data ditransformasi dengan dantum^-0.3
+transformasi.bc=function(data, lambda){
+  for(i in 1:length(data)){
+    data[i]=-1*(data[i]^lambda)
+    }
+  return(data)
+}
+
+data21 = transformasi.bc(data2,-0.258)
+
+#melihat boxplot setelah transformasi
+boxplot(data21,col="skyblue",border="blue", main="Cek Normalitas", ylab="Waktu")
+
+?t.test
+# Uji Hipotesis Satu Angkatan
+t.test(data21, alternative = "greater", mu=transformasi.bc(50,-0.258), conf.level = 0.99)
+#t table
+qt(0.99,11)
+```
+
+```{r}
+#Asumsi Normalitas
+#menginput data
+baru = c(82,87,85,78,91,94,85,81,84)
+standar = c(85,91,79,78,86,90,81,84,81)
+#membentuk data frame
+data = data.frame(baru,standar)
+library(tidyverse)
+library(plotly)
+#menyatukan variabel baru dan standar dari data frame sebagai data2
+data2 = gather(data, key="variabel", value="value")
+data2
+#membuat boxplot variabel baru dan standar
+x = ggplot(data2, aes(x=variabel,y=value,fill=variabel))+ geom_boxplot()+ggtitle("Boxplot Metode Baru dan Standar")+xlab("Variabel")+ylab("Values")
+ggplotly(x)
+
+#Asumsi Kesamaan Dua Variansi
+#Mencari nilai variansi dari variabel baru
+var(baru)
+#Mencari nilai variansi dari variabel standar
+var(standar)
+#atau
+var.test(standar, baru, ratio = 1, conf.level = 0.95)
+
+#Uji Hipotesis
+#Melakukan uji t 2 sampel independen baru dan standar
+t.test(baru,standar,alternative="greater", mu=0, var.equal=TRUE)
+```
+
+
+
+```{r}
+dependent_data = data.frame(Sebelum = c(12,8,16,10,14,6,18,9,11,7),
+                            Sesudah = c(10,7,14,8,12,5,16,8,10,6))
+dependent_data
+```
+```{r}
+library(tidyverse)
+library(plotly)
+
+bp = ggplot(gather(dependent_data, key="variabel", value ="value"),
+  aes(x=variabel, y=value, fill=variabel)) +
+  geom_boxplot() +
+  ggtitle("Boxplot Waktu Penyelesaian Tugas Sebelum dan Sesudah") +
+  xlab("Variabel") +
+  ylab("Values")
+ggplotly(bp)
+```
+```{r}
+shapiro.test(dependent_data$Sebelum)
+shapiro.test(dependent_data$Sesudah)
+```
+
+```{r}
+#Uji Rata-rata 2 Populasi Dependen
+t.test(dependent_data$Sebelum,dependent_data$Sesudah,alternative="two.sided",mu=0,paired=TRUE, conf.level = 0.95)
+```
+```{r}
+#memanggil library
+library(tidyverse)
+library(car)
+library(plotly)
+```
+
+```{r}
+# Membuat dataframe bernama data_pupuk
+data_pupuk <- data.frame(
+  A = c(102, 88, 109, 96, 89, 106, 102, 98, 93, 90),
+  B = c(89, 90, 95, 80, 74, 85, 92, 89, 105, 90),
+  C = c(57, 46, 28, 26, 38, 20, 39, 39, 43, 23),
+  D = c(67, 72, 66, 44, 68, 64, 57, 61, 61, 74)
+)
+
+# Melihat isi dataframe
+print(data_pupuk)
+
+```
+```{r}
+anova1<-data_pupuk%>%
+  gather(key="jenis_pupuk",value="berat_cengkeh") %>% 
+  mutate(jenis_pupuk = as.factor(jenis_pupuk))
+anova1
+```
+```{r}
+#1. Normalitas data
+cek_nor<-boxplot(data_pupuk[1:4],col=c("green","yellow","pink","blue"),
+                 border="black",
+                 xlab="jenis Pupuk",
+                 ylab="Berat Cengkeh (Kg)",
+                 main="Cek Normalitas")
+```
+
+```{r}
+for (i in 1:4){
+  print(shapiro.test(data_pupuk[,i]))
+}
+```
+
+```{r}
+library(car)
+
+# Melakukan uji Levene
+leveneTest(berat_cengkeh ~ jenis_pupuk, data = anova1)
+```
+```{r}
+anova2 <- aov(berat_cengkeh ~ jenis_pupuk, data = anova1)
+anova_summary <- summary(anova2)
+
+anova2
+anova_summary
+cat("F Tabel = ", qf(0.95, anova_summary[[1]]$Df[1], anova_summary[[1]]$Df[2]), "\n")
+```
+```{r}
+# Uji Tukey untuk membandingkan rata-rata berat cengkeh berdasarkan jenis pupuk
+tukey_result <- TukeyHSD(anova2)
+
+# Melihat hasil uji Tukey
+print(tukey_result)
+
+```
+  
+
+```{r}
+# Menghitung rata-rata berat cengkeh per jenis pupuk
+mean_produksi <- aggregate(berat_cengkeh ~ jenis_pupuk, data = anova1, FUN = mean)
+
+# Membuat plot garis sederhana untuk mean berat cengkeh per jenis pupuk
+plot(mean_produksi$jenis_pupuk, mean_produksi$berat_cengkeh, type = "b", 
+     xlab = "Pupuk", ylab = "Mean of Produksi", 
+     main = "Mean of Produksi per Jenis Pupuk",
+     pch = 1, col = "black", lty = 1, ylim = c(min(mean_produksi$berat_cengkeh), max(mean_produksi$berat_cengkeh)))
+
+# Menambahkan garis antar titik
+lines(mean_produksi$jenis_pupuk, mean_produksi$berat_cengkeh, type = "b", pch = 1)
+
+```
+
+
+```{r}
+# Menyusun data untuk pairwise.t.test
+x <- anova1$berat_cengkeh        # Variabel hasil (berat cengkeh)
+g <- anova1$jenis_pupuk          # Variabel grup (jenis pupuk)
+
+# Melakukan Pairwise T-test dengan metode Bonferroni
+mca_result_bonferroni <- pairwise.t.test(x, g, p.adjust.method = "bonferroni")
+
+# Menampilkan hasil Pairwise T-test dengan Bonferroni adjustment
+print(mca_result_bonferroni)
+
+# Melakukan Pairwise T-test dengan metode Tukey (sebagai contoh lain)
+mca_result_tukey <- pairwise.t.test(x, g, p.adjust.method = "holm")
+
+# Menampilkan hasil Pairwise T-test dengan Tukey adjustment
+print(mca_result_tukey)
+?pairwise.t.test
+```
+
+```{r}
+# Menghitung rata-rata berat cengkeh per jenis pupuk
+mean_values <- aggregate(berat_cengkeh ~ jenis_pupuk, data = anova1, FUN = mean)
+
+# Menyusun Pairwise T-Test dengan metode Bonferroni
+mca_result_bonferroni <- pairwise.t.test(anova1$berat_cengkeh, anova1$jenis_pupuk, p.adjust.method = "bonferroni")
+
+# Menampilkan hasil Pairwise T-Test dengan Bonferroni adjustment
+print(mca_result_bonferroni)
+
+# Menghitung mean difference untuk setiap pasangan
+mean_diff <- outer(mean_values$berat_cengkeh, mean_values$berat_cengkeh, "-")
+
+# Memberikan nama baris dan kolom
+rownames(mean_diff) <- colnames(mean_diff) <- mean_values$jenis_pupuk
+
+# Menampilkan mean difference untuk setiap pasangan
+cat("Mean Difference for Each Pair:\n")
+print(mean_diff)
+
+```
+

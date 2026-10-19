@@ -1,0 +1,36 @@
+ID_Transaksi,Tanggal,Marketplace,Status_Pesanan,Metode_Bayar
+TRX1007,25 Mei 2024,tiktok shop,Complete,QRIS
+TRX1013,2024-03-17,TikTok Shop,SELESAI,
+TRX1016,12 April 2024,TikTok Shop,Dibatalkan,
+TRX1017,12 Januari 2024,TikTok Shop,SELESAI,
+TRX1020,1 Februari 2024,tiktok shop,Diproses,Kartu Kredit
+TRX1022,09/04/2024,TikTok Shop,selesai,
+TRX1025,3 Maret 2024,tiktok shop,Dibatalkan,Transfer Bank
+TRX1034,2024-03-23,TikTok Shop,SELESAI,COD
+TRX1042,3 Mei 2024,tiktok shop,selesai,
+TRX1044,2024-05-05,TikTok Shop,Selesai,COD
+TRX1047,5 Mei 2024,TikTok Shop,Dibatalkan,Kartu Kredit
+TRX1048,15/04/2024,TikTok Shop,selesai,Kartu Kredit
+TRX1052,15 Maret 2024,TikTok Shop,selesai,Kartu Kredit
+TRX1055,2024-05-09,tiktok shop,,QRIS
+TRX1056,2024-03-28,TikTok Shop,Diproses,
+TRX1060,2024-04-05,tiktok shop,Complete,QRIS
+TRX1027,27/04/2024,tiktok shop,Dibatalkan,Kartu Kredit
+TRX1013,2024-01-11,TikTok Shop,selesai,
+TRX1066,2024-04-03,TikTok Shop,Diproses,Transfer Bank
+TRX1072,22/03/2024,tiktok shop,,QRIS
+TRX1074,08/04/2024,TikTok Shop,diproses,
+TRX1083,16/03/2024,tiktok shop,diproses,QRIS
+TRX1088,13 Mei 2024,tiktok shop,Complete,COD
+TRX1089,2024-02-06,TikTok Shop,Complete,
+TRX1096,21 Januari 2024,tiktok shop,Diproses,Transfer Bank
+TRX1115,19/01/2024,tiktok shop,Dibatalkan,
+TRX1118,4 Januari 2024,tiktok shop,Dibatalkan,QRIS
+TRX1121,16 Januari 2024,TikTok Shop,diproses,Transfer Bank
+TRX1128,06/02/2024,TikTok Shop,Complete,
+TRX1021,21/04/2024,TikTok Shop,selesai,
+TRX1140,19 Maret 2024,tiktok shop,diproses,COD
+TRX1141,11 Maret 2024,tiktok shop,diproses,
+TRX1146,2024-04-13,TikTok Shop,Selesai,
+TRX1149,26 April 2024,TikTok Shop,selesai,COD
+TRX1017,12 Januari 2024,TikTok Shop,SELESAI,
