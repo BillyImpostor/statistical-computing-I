@@ -1,0 +1,449 @@
+---
+title: "06. Simulasi Monte Carlo"
+author: "Kurniawan Chandra Wijaya direvisi oleh Giyar Amarta Rizqi"
+date: "2024-10-21 direvisi pada 2026-10-28"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Pertemuan 6: Simulasi Monte Carlo
+
+## 2. Simulasi Monte Carlo Standar: *Direct Sampling*
+
+### 2.1. Kasus Estimasi Nilai $\pi$ berdasarkan Bola Homogen
+
+Metode *acceptance-rejection* digunakan untuk mengestimasi nilai $\pi$ dengan pendekatan bola homogen dengan jari-jari $2R$ pada ruang kubus dengan panjang sisi $2R$.
+
+Fungsi:
+
+```{r}
+# Estimasi nilai π dengan metode acceptance-rejection
+estimate_pi <- function(n_points, R = 1) {
+  ### Fungsi ini mengestimasi nilai π dengan metode acceptance-rejection ###
+  ### Input:
+  ### n_points = banyaknya titik sampel
+  ### R = jari-jari
+  
+  # Membangkitkan titik-titik acak di dalam kubus [-R, R]^3
+  x <- runif(n_points, min = -R, max = R)
+  y <- runif(n_points, min = -R, max = R)
+  z <- runif(n_points, min = -R, max = R)
+  
+  # Menghitung jarak titik ke pusat (0, 0, 0) dan memeriksa apakah diterima
+  in_sphere <- (x^2 + y^2 + z^2) <= R^2
+  
+  # Menghitung proporsi titik yang berada di dalam bola
+  n_in_sphere <- sum(in_sphere)
+  
+  # Estimasi volume bola
+  volume_cube <- (2 * R)^3
+  volume_sphere_est <- (n_in_sphere / n_points) * volume_cube
+  
+  # Estimasi nilai π dari volume bola
+  pi_estimate <- (3 / 4) * (volume_sphere_est / R^3)
+  
+  return(pi_estimate)
+}
+```
+
+Simulasi:
+
+```{r}
+set.seed(123) # Untuk memastikan pengacakan konstan
+n_points <- 1000000
+pi_estimate <- estimate_pi(n_points)
+cat("Estimasi nilai π:", pi_estimate, "\n")
+```
+
+Simulasi:
+
+```{r}
+set.seed(123) # Untuk memastikan pengacakan konstan
+n_points <- 10000000
+pi_estimate <- estimate_pi(n_points)
+cat("Estimasi nilai π:", pi_estimate, "\n")
+### 2.2. Simulasi Banyaknya Penjualan dengan *Empirical Probability*
+
+```
+
+Simulasi:
+
+```{r}
+set.seed(123) # Untuk memastikan pengacakan konstan
+n_points <- 100000000
+pi_estimate <- estimate_pi(n_points)
+cat("Estimasi nilai π:", pi_estimate, "\n")
+### 2.2. Simulasi Banyaknya Penjualan dengan *Empirical Probability*
+
+```
+Nilai Jarak ke π
+Simulasi 1000000: 3.144042|3.144042 − π| ≈ 0.00244935
+Simulasi 10000000: 3.140233|3.140233 − π| ≈ 0.00135965
+Simulasi 100000000: 3.141558|3.141558 − π| ≈ 0.00003465
+Simulasi 1000000000: itung sendiri karena semakin banyak semakin mirip tapi yg pasti bakal mendekati nilai pi kok. (sintaksnya di bawah ini :)
+
+```{r}
+set.seed(123) # Untuk memastikan pengacakan konstan
+n_points <- 100000000
+pi_estimate <- estimate_pi(n_points)
+cat("Estimasi nilai π:", pi_estimate, "\n")
+### 2.2. Simulasi Banyaknya Penjualan dengan *Empirical Probability*
+
+```
+
+Fungsi:
+
+```{r}
+simulasi.mc = function(x,y,n){
+  ### Fungsi ini mensimulasikan banyaknya penjualan dengan metode Monte Carlo ###
+  ### Input: 
+  ### x = banyaknya permintaan
+  ### y = frekuensi permintaan
+  ### n = banyaknya hari
+  
+  # Menghitung pdf dan cdf banyaknya permintaan
+  pdf = y/sum(y)
+  cdf = cumsum(pdf)
+  cdf[1] = pdf[1]
+  for(i in 2:length(y)){
+    cdf[i] = cdf[i-1] + pdf[i]
+  }
+  
+  # Mencetak pdf dan cdf banyaknya permintaan
+  tabel1 = data.frame(permintaan = x, freq = y, pdf, cdf)
+  print(tabel1)
+  
+  # Mengacak bilangan sebanyak n
+  set.seed(123)
+  random = runif(n)
+  cat("\n")
+  cat("Nilai Random: ", round(random, 2), "\n")
+  
+  # Membandingkan bilangan random dengan interval bilangan
+  kesimpulan = NULL
+  cat("\n")
+  for(i in 1:n){
+    for(j in 1:length(x)){
+      if(random[i] <= cdf[j]){
+        kesimpulan[i] = x[j]
+        break
+      }
+    }
+  }
+  
+  # Mencetak tabel ramalan banyaknya permintaan
+  tabel2 = data.frame(Hari = c(1:n), Ban = kesimpulan)
+  print(tabel2)
+}
+```
+
+Simulasi:
+
+```{r}
+set.seed(123)
+permintaan = c("0", "1", "2", "3", "4", "5")
+freq = c(10, 20, 40, 60, 40, 30)
+n = 10
+simulasi.mc(permintaan, freq, 10)
+```
+
+## 3. Markov Chain Monte Carlo (MCMC)
+
+#### Kasus Markov Chain Diskrit
+
+Fungsi:
+
+```{r}
+mcmc <- function(P, lambda, n1, n2, nama_states = NULL) {
+  ### Fungsi ini mensimulasikan sampel Markov Chain Monte Carlo (MCMC) ###
+  ### Input:
+  ### P = matriks transisi
+  ### lambda = distribusi awal
+  ### n1 = periode burn-in
+  ### n2 = jumlah sampel yang diinginkan
+  ### nama_states = daftar nama untuk setiap state
+  
+  # Jika nama_states tidak diberikan, gunakan default 1, 2, ..., k
+  if (!is.null(nama_states)) {
+    states = nama_states
+  } else {
+    states = 1:length(lambda)
+  }
+  
+  k = length(lambda)
+  
+  # Total sampel (termasuk burn-in)
+  total_sampel = n1 + n2
+  
+  # Matriks untuk menyimpan hasil sampel
+  x = numeric(total_sampel)
+  
+  # State awal (diambil dari distribusi awal lambda)
+  x[1] = sample(1:k, 1, prob = lambda)  # Gunakan indeks 1 hingga k untuk sampling awal
+  
+  # Periode burn-in
+  for (i in 2:n1) {
+    x[i] = sample(1:k, 1, prob = P[x[i - 1], ])  # Transisi berdasarkan matriks P
+  }
+  
+  # Periode pengambilan sampel setelah burn-in
+  for (i in (n1 + 1):total_sampel) {
+    x[i] = sample(1:k, 1, prob = P[x[i - 1], ])  # Transisi berdasarkan matriks P
+  }
+  
+  # Mengambil sampel setelah periode burn-in
+  sampel_akhir = x[(n1 + 1):total_sampel]
+  
+  # Mengubah indeks hasil sampling menjadi nama states
+  sampel = states[sampel_akhir]
+  
+  return(sampel)
+}
+```
+
+Simulasi:
+
+```{r}
+set.seed(123)
+# Transition Matrix
+P = matrix(c(0.9, 0.1, 0.2, 0.8), nrow=2, byrow=TRUE)
+# Initial State
+lambda = c(0.50, 0.50)
+# Number of burn-in period
+n1 = 200
+# Number of samples
+n2 = 10000
+# Name of state
+states = c("Coke", "Pepsi")
+# Simulate the MCMC
+x = mcmc(P, lambda, n1, n2, nama_states = states)
+head(x)
+```
+
+Eksplorasi hasil simulasi:
+
+```{r}
+# Menghitung probabilitas masing-masing state
+prop.table(table(x))
+```
+
+#### Kasus Markov Chain Kontinu
+
+*Sampling* distribusi yang... aneh?
+
+Target:
+
+```{r}
+# Target distribution
+target <- function(x) {
+  return(exp(-x^2) * (2 + sin(5*x) + sin(2*x)))
+}
+```
+
+Fungsi:
+
+```{r}
+mcmc_mh <- function(x, sigma) {
+  proposed_x <- rnorm(1, mean = x, sd = sigma)
+  accept_prob <- min(1, target(proposed_x) / target(x))
+  u <- runif(1)
+  if(u <= accept_prob) {
+    value <- proposed_x
+    accepted <- TRUE
+  } else {
+    value <- x
+    accepted <- FALSE
+  }
+  out <- data.frame(value = value, accepted = accepted)
+  out
+}
+```
+
+Fungsi Simulasi:
+
+```{r}
+mcmc_mh_sampler <- function(initial_value, n = 1000, sigma = 1,
+                            burnin = 0, lag = 1){
+  results <- list()
+  current_state <- initial_value
+  for(i in 1:burnin) {
+    out <- mcmc_mh(current_state, sigma)
+    current_state <- out$value
+  }
+  for(i in 1:n) {
+    for(j in 1:lag) {
+      out <- mcmc_mh(current_state, sigma)
+      current_state <- out$value
+    }
+    results[[i]] <- out
+  }
+  results <- do.call(rbind, results)
+  results
+}
+```
+
+Simulasi:
+
+```{r}
+set.seed(123)
+out <- mcmc_mh_sampler(initial_value = 0, n = 10000, burnin = 100)
+head(out)
+```
+
+Plot hasil dengan Line Plot:
+
+```{r}
+plot(out$value, type = "l", col = "blue", lwd = 2, xlab = "Iteration", ylab = "Value", main = "MCMC Metropolis-Hastings")
+```
+
+Plot hasil dengan Histogram:
+
+```{r}
+hist(out$value, breaks = 50, col = "lightblue", main = "Histogram of MCMC Metropolis-Hastings", xlab = "Value")
+```
+
+KDE plot:
+
+```{r}
+density <- density(out$value)
+plot(density, main = "Density Plot of MCMC Metropolis-Hastings", xlab = "Value", ylab = "Density")
+```
+
+#### MCMC untuk Bayesian Regression
+
+Inisiasi Data:
+
+```{r}
+set.seed(123)
+# Simulated data
+n <- 1000
+x <- rnorm(n, 10, 5)
+beta0_true <- 2
+beta1_true <- 3
+sigma_true <- 2
+y <- beta0_true + beta1_true * x + rnorm(n, 0, sigma_true)
+```
+
+Pembentukan fungsi likelihood, log-prior, dan log-posterior:
+
+```{r}
+# Prior parameters
+mu_0 <- 0
+sd_0 <- 10
+mu_1 <- 0
+sd_1 <- 10
+alpha_s2 <- 1
+beta_s2 <- 1
+
+# Likelihood function
+likelihood <- function(y, x, beta0, beta1, sigma2) {
+  n = length(y)
+  ll = - n/2 * log(2*pi) - n/2 * log(sigma2) - 1/(2*sigma2) * sum((y - beta0 - beta1 * x)^2)
+  return(ll)
+}
+
+# Prior function
+log_prior <- function(beta0, beta1, sigma2) {
+  # Normal prior for beta0 and beta1
+  prior_beta0 <- dnorm(beta0, mu_0, sd_0, log = TRUE)
+  prior_beta1 <- dnorm(beta1, mu_1, sd_1, log = TRUE)
+  
+  # Inverse-gamma prior for sigma2
+  prior_sigma2 <- dgamma(1 / sigma2, alpha_s2, beta_s2, log = TRUE) - 2 * log(sigma2)
+  
+  return(prior_beta0 + prior_beta1 + prior_sigma2)
+}
+
+# Posterior function (log scale)
+log_posterior <- function(beta0, beta1, sigma2, y, x) {
+  log_prior(beta0, beta1, sigma2) + likelihood(y, x, beta0, beta1, sigma2)
+}
+```
+
+Fungsi:
+
+```{r}
+mcmc_metropolis <- function(y, x, burnin, samplesize, initial_values, proposal_sd) {
+  n <- length(y)
+  total_samples <- burnin + samplesize
+  beta0 <- rep(NA, total_samples)
+  beta1 <- rep(NA, total_samples)
+  sigma2 <- rep(NA, total_samples)
+  acc_status <- rep(NA, total_samples)
+  
+  # Initial values
+  beta0[1] <- initial_values[1]
+  beta1[1] <- initial_values[2]
+  sigma2[1] <- initial_values[3]
+  
+  for (i in 2:total_samples) {
+    # Proposal
+    beta0_prop <- rnorm(1, beta0[i - 1], proposal_sd[1])
+    beta1_prop <- rnorm(1, beta1[i - 1], proposal_sd[2])
+    sigma2_prop <- abs(rnorm(1, sigma2[i - 1], proposal_sd[3]))  # Ensure sigma2 > 0
+    
+    # Acceptance probability
+    log_alpha <- log_posterior(beta0_prop, beta1_prop, sigma2_prop, y, x) - 
+      log_posterior(beta0[i - 1], beta1[i - 1], sigma2[i - 1], y, x)
+    
+    # Accept or reject
+    if (log(runif(1)) < min(log_alpha, 1)) {
+      beta0[i] <- beta0_prop
+      beta1[i] <- beta1_prop
+      sigma2[i] <- sigma2_prop
+      acc_status[i] <- TRUE
+    } else {
+      beta0[i] <- beta0[i - 1]
+      beta1[i] <- beta1[i - 1]
+      sigma2[i] <- sigma2[i - 1]
+      acc_status[i] <- FALSE
+    }
+  }
+  
+  out <- data.frame(beta0 = beta0[(burnin + 1):total_samples],
+                    beta1 = beta1[(burnin + 1):total_samples],
+                    sigma2 = sigma2[(burnin + 1):total_samples],
+                    acc_status = acc_status[(burnin + 1):total_samples])
+  return(out)
+}
+```
+
+Simulasi:
+
+```{r}
+set.seed(123)
+burnin <- 1000  # Burn-in period
+samplesize <- 5000  # Number of samples to draw
+initial_values <- c(1, 1, 1)  # Initial values for beta0, beta1, sigma2
+proposal_sd <- c(0.05, 0.05, 0.05)  # Proposal standard deviations
+
+out <- mcmc_metropolis(y, x, burnin, samplesize, initial_values, proposal_sd)
+head(out)
+```
+
+Plot hasil:
+
+```{r}
+# Plot trace
+par(mfrow = c(3, 1))
+plot(out$beta0, type = "l", col = "blue", lwd = 2, xlab = "Iteration", ylab = "Value", main = "Trace of beta0")
+plot(out$beta1, type = "l", col = "blue", lwd = 2, xlab = "Iteration", ylab = "Value", main = "Trace of beta1")
+plot(out$sigma2, type = "l", col = "blue", lwd = 2, xlab = "Iteration", ylab = "Value", main = "Trace of sigma2")
+```
+
+Estimasi:
+
+```{r}
+# Posterior means
+posterior_means <- colMeans(out[, 1:3])
+posterior_means
+```
+
+Cek dengan lm:
+
+```{r}
+summary(lm(y ~ x))
+```

@@ -108,3 +108,23 @@ if (abs(t) > t_tabel) {
 t.test(x = sampel, mu = miu_nol, alternative = "two.sided")
 
 t
+
+# Semester 3 Setelah UTS
+set.seed(2026)
+n <- 100
+studi_hours <- runif(n, 2, 15)
+score <- 45 + 3.0*studi_hours + rnorm(n, 0, 8)
+
+data <- data.frame(
+  studi_hours, score
+)
+
+head(data)
+
+plot(data$studi_hours,
+    data$score,
+    pch = 19,
+    xlab = "Study hours",
+    ylab = "Exam score",
+    main = "Exam Score vs Study Hours"
+)

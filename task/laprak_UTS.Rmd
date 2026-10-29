@@ -1,0 +1,553 @@
+---
+title: "Laporan Praktikum UTS Komputasi Statistika I"
+author: "Cheisa Billy Putra Antoni"
+date: "2026-10-27"
+output: html_document
+---
+
+# SOAL NOMOR 1
+```{r}
+# Impor Dataset
+orders <- read.csv("../data/orders.csv")
+order_details <- read.csv("../data/order_details.csv")
+pizzas <- read.csv("../data/pizzas.csv")
+pizza_types <- read.csv("../data/pizza_types.csv")
+```
+
+```{r}
+# Penggabungan (Merge) seluruh tabel berdasarkan identifier bersama
+library(tidyverse)
+df1_merged <- order_details %>%
+  inner_join(pizzas, by = "pizza_id") %>%
+  inner_join(pizza_types, by = "pizza_type_id") %>%
+  inner_join(orders, by = "order_id") %>%
+  mutate(
+    date = as.Date(date),
+    revenue = quantity * price
+  )
+head(df1_merged)
+```
+
+## NOMOR 1 BAGIAN A
+```{r, fig.width = 12, fig.height = 6}
+# (i) Bar chart: Top 10 Pizza Types berdasarkan total unit terjual
+top10_pizza <- df1_merged %>%
+  group_by(name) %>%
+  summarise(total_quantity = sum(quantity)) %>%
+  arrange(desc(total_quantity)) %>%
+  slice(1:10)
+
+ggplot(top10_pizza, aes(x = reorder(name, total_quantity), y = total_quantity)) +
+  geom_col(fill = "#2b5c8f", width = 0.7) +
+  geom_text(aes(label = total_quantity), 
+            hjust = -0.15,
+            size = 3.5, 
+            color = "black") + 
+  coord_flip() +
+  labs(
+    title = "Top 10 Pizza Types dengan Penjualan Tertinggi (2015)",
+    x = "Jenis Pizza",
+    y = "Total Unit Terjual"
+  ) +
+  theme_minimal(base_family = "sans") +
+  theme(
+    plot.title = element_text(face = "bold", size = 14, hjust = 0.5),
+    axis.text = element_text(size = 10, color = "black"),
+    axis.title = element_text(size = 11, color = "black", face = "bold")
+  ) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.15)))
+```
+
+```{r, fig.width = 12, fig.height = 6}
+# (ii) Line chart: Pendapatan Harian (Daily Revenue) sepanjang tahun 2015
+daily_revenue <- df1_merged %>%
+  group_by(date) %>%
+  summarise(total_revenue = sum(revenue))
+
+ggplot(daily_revenue, aes(x = date, y = total_revenue)) +
+  geom_line(color = "#e65c00", linewidth = 0.7) +
+  labs(
+    title = "Tren Pendapatan Harian Restoran Pizza (Tahun 2015)",
+    x = "Tanggal",
+    y = "Pendapatan Harian ($)"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(face = "bold", size = 14, hjust = 0.5),
+    # Mengubah warna teks angka sumbu dan label judul sumbu menjadi hitam
+    axis.text = element_text(color = "black", size = 10),
+    axis.title = element_text(color = "black", size = 11, face = "bold")
+)
+```
+
+## NOMOR 1 BAGIAN B
+```{r}
+# Mengagregasi total kuantitas unit pizza per order_id
+order_quantity <- df1_merged %>%
+  group_by(order_id) %>%
+  summarise(X = sum(quantity))
+head(order_quantity)
+```
+
+```{r}
+# (i) Empirical Probability Mass Function (PMF) dari X
+empirical_pmf <- order_quantity %>%
+  count(X) %>%
+  mutate(pmf = n / sum(n))
+print(empirical_pmf)
+```
+
+```{r}
+# (ii) Nilai Ekspektasi Empiris (Mean) dan Variansi Empiris dari X
+mean_X <- mean(order_quantity$X)
+var_X <- var(order_quantity$X)
+
+cat("Nilai Ekspektasi Empiris E[X] =", round(mean_X, 4), "\n")
+cat("Variansi Empiris Var(X)       =", round(var_X, 4), "\n")
+```
+
+```{r}
+# (iii) Fitting Distribusi Poisson dengan lambda = mean_X
+lambda_hat <- mean_X
+
+prob_poisson_eq_2 <- dpois(x = 2, lambda = lambda_hat)
+prob_poisson_le_3 <- ppois(q = 3, lambda = lambda_hat)
+
+cat("P(X = 2) Teoretis Poisson  =", round(prob_poisson_eq_2, 4), "\n")
+cat("P(X <= 3) Teoretis Poisson =", round(prob_poisson_le_3, 4), "\n")
+```
+
+```{r}
+# (iv) Perbandingan Probabilitas Teoretis vs Empiris
+prob_emp_eq_2 <- 0.2881499
+prob_emp_le_3 <- 0 + 0.3799063 + 0.2881499 + 0.1502108
+
+cat("P(X = 2) Empiris   =", round(prob_emp_eq_2, 4), "\n")
+cat("P(X <= 3) Empiris  =", round(prob_emp_le_3, 4), "\n")
+```
+
+## NOMOR 1 BAGIAN C
+```{r}
+# Agregasi total kuantitas per tanggal & klasifikasi Weekday/Weekend
+daily_sales <- df1_merged %>%
+  group_by(date) %>%
+  summarise(total_quantity = sum(quantity)) %>%
+  mutate(
+    day_name = wday(date, label = TRUE, abbr = FALSE),
+    day_type = if_else(day_name %in% c("Saturday", "Sunday"), "Weekend", "Weekday"),
+    day_type = factor(day_type, levels = c("Weekday", "Weekend"))
+)
+head(daily_sales)
+```
+
+```{r}
+# (ii) Uji Asumsi Normalitas
+library(nortest)
+lillie.test(daily_sales$total_quantity[daily_sales$day_type == "Weekday"])
+lillie.test(daily_sales$total_quantity[daily_sales$day_type == "Weekend"])
+
+# Uji Asumsi Homogenitas Variansi
+var.test(total_quantity ~ day_type, data = daily_sales)
+```
+
+```{r, fig.width = 12, fig.height = 6}
+# Membuat boxplot khusus data Weekday
+weekday_qty <- daily_sales$total_quantity[daily_sales$day_type == "Weekday"]
+
+boxplot(weekday_qty,
+        main = "Boxplot Penjualan (Weekday)",
+        ylab = "Total Quantity",
+        col = "skyblue",
+        border = "black",
+        pch = 19,
+        outcol = "red"
+)
+```
+
+```{r, fig.width = 12, fig.height = 6}
+# Membuat histogram khusus data Weekday
+weekday_qty <- daily_sales$total_quantity[daily_sales$day_type == "Weekday"]
+hist(weekday_qty,
+     main = "Histogram Penjualan (Weekday)",
+     xlab = "Total Quantity",
+     ylab = "Frekuensi",
+     col = "skyblue",
+     border = "black",
+     breaks = 10)
+```
+
+```{r}
+# Penanganan Asumsi Normalitas (Tranformasi Box-cox)
+library(AID)
+library(MASS)
+library(car)
+library(tidyverse)
+
+# 1. Transformasi Box-cox dengan library AID
+out = boxcoxnc(weekday_qty, method = "mle", lambda = seq(-2,2,0.001), verbose = F, plot = F)
+out$lambda.hat
+
+# 2. Transformasi Box-cox dengan library MASS
+out = boxcox(weekday_qty~1, lambda = seq(-2,2,0.0001), plotit = F)
+out$x[which.max(out$y)]
+
+# 3. Transformasi Box-cox dengan library Car
+out = powerTransform(weekday_qty, family ="bcPower")
+out$lambda
+```
+
+```{r, fig.width = 12, fig.height = 6}
+# Transformasi Data Berdasarkan Nilai Lambda
+transformasi.bc=function(data, lambda){
+  for(i in 1:length(data)){
+    data[i]=-1*(data[i]^lambda)
+    }
+  return(data)
+  }
+weekday_qty_tr = tfbc=transformasi.bc(weekday_qty, -0.678)
+
+# Membuat boxplot setelah transformasi
+boxplot(weekday_qty_tr,
+        main = "Boxplot Penjualan (Weekday) Setelah Transformasi",
+        ylab = "Total Quantity",
+        col = "skyblue",
+        border = "black",
+        pch = 19,
+        outcol = "red"
+)
+```
+
+```{r}
+# (iii) Pelaksanaan Two-Sample Welch t-test
+t.test(total_quantity ~ day_type, data = daily_sales, var.equal = TRUE)
+```
+
+## NOMOR 1 BAGIAN D
+```{r}
+# Agregasi total pendapatan per tanggal & tetapkan ke Bulan
+daily_revenue_month <- df1_merged %>%
+  group_by(date) %>%
+  summarise(total_revenue = sum(revenue)) %>%
+  mutate(
+    month = factor(month(date, label = TRUE, abbr = FALSE), levels = month.name)
+)
+head(daily_revenue_month)
+```
+
+```{r}
+# (ii) Asumsi Normalitas Residual
+library(nortest)
+anova_fit <- aov(total_revenue ~ month, data = daily_revenue_month)
+lillie.test(residuals(anova_fit))
+
+# Asumsi Homogenitas Variansi
+library(car)
+leveneTest(total_revenue ~ month, data = daily_revenue_month)
+```
+
+```{r, fig.width = 12, fig.height = 6}
+# Membuat boxplot residual
+boxplot(residuals(anova_fit),
+        main = "Boxplot Residual ANOVA",
+        ylab = "Residuals",
+        col = "skyblue",
+        border = "black",
+        pch = 19,
+        outcol = "red")
+```
+
+```{r, fig.width = 12, fig.height = 6}
+# Membuat histogram residual
+hist(residuals(anova_fit),
+     main = "Histogram Residual ANOVA",
+     xlab = "Residuals",
+     ylab = "Frekuensi",
+     col = "skyblue",
+     border = "black",
+     breaks = 12)
+```
+
+```{r}
+# (iii) Pengujian ANOVA Satu Arah
+summary(aov(total_revenue ~ month, data = daily_revenue_month))
+```
+
+# SOAL NOMOR 2
+```{r}
+# Impor Dataset
+orders_date_raw <- read.csv("../data/Orders Date.csv")
+pizza_info_raw <- read.csv("../data/Pizza Informations.csv")
+pizza_order_list_raw <- read.csv("../data/Pizza Order List.csv")
+pizza_prices_raw <- read.csv("../data/Pizza Unit Prices.csv")
+ratings_raw <- read.csv("../data/Ratings.csv")
+```
+
+## NOMOR 2 BAGIAN A
+```{r}
+# 1. EDA Data Orders Date
+library(tidyverse)
+library(lubridate)
+cat("EDA Data 'orders_date_raw'\n")
+cat("Jumlah Baris:", nrow(orders_date_raw), "| Kolom:", ncol(orders_date_raw), "\n\n")
+cat("Contoh Nilai Kolom 'Orders' (Gabungan ID & Waktu):\n")
+print(head(orders_date_raw$Orders, 1))
+cat("\nContoh Format Tanggal (Kolom 'Date'):\n")
+print(head(orders_date_raw$Date, 1))
+cat("\n")
+```
+
+```{r}
+# 2. EDA Data Pizza Order List
+library(tidyverse)
+library(lubridate)
+cat("EDA Data 'pizza_order_list_raw'\n")
+cat("Jumlah Baris:", nrow(pizza_order_list_raw), "| Kolom:", ncol(pizza_order_list_raw), "\n\n")
+cat("Contoh String Multi-item Pesanan ('pizza.order.list.with.quantity'):\n")
+print(head(pizza_order_list_raw$`pizza.order.list.with.quantity`, 2))
+cat("\nContoh Timestamp Mentah (Kolom 'date'):\n")
+print(head(pizza_order_list_raw$date, 2))
+cat("\n")
+```
+
+```{r}
+# 3. EDA Data Ratings
+library(tidyverse)
+cat("EDA Data 'ratings_raw'\n")
+cat("Jumlah Baris:", nrow(ratings_raw), "| Kolom:", ncol(ratings_raw), "\n\n")
+cat("Nilai unik pada 'rating_service':\n")
+print(unique(ratings_raw$rating_service))
+cat("\nNilai unik pada 'rating_pizza':\n")
+print(unique(ratings_raw$rating_pizza))
+cat("\nJumlah nilai '-', 'na', atau NA pada service rating:\n")
+cat(sum(ratings_raw$rating_service %in% c("-", "na", "", NA)), "baris\n")
+cat("\n")
+```
+
+```{r}
+# 4. EDA Data Pizza Info
+cat("EDA Data 'pizza_info_raw'\n")
+cat("Jumlah Baris:", nrow(pizza_info_raw), "| Kolom:", ncol(pizza_info_raw), "\n")
+cat("Kolom Pizza Info:", paste(colnames(pizza_info_raw), collapse = ", "), "\n")
+```
+
+```{r}
+# 5. EDA Data Pizza Prices
+cat("EDA Data 'pizza_prices_raw'\n")
+cat("Jumlah Baris:", nrow(pizza_prices_raw), "| Kolom:", ncol(pizza_prices_raw), "\n")
+cat("Kolom Pizza Prices:", paste(colnames(pizza_prices_raw), collapse = ", "), "\n")
+```
+
+## NOMOR 2 BAGIAN B
+```{r}
+library(tidyverse)
+library(lubridate)
+
+# 1. Penanganan Data Orders Date
+df_orders <- orders_date_raw %>%
+  separate_rows(Orders, sep = ",\\s*") %>%
+  separate(Orders, into = c("Order ID", "Order Time"), sep = " - ") %>%
+  mutate(
+    `Order ID`   = as.numeric(`Order ID`),
+    `Order Date` = as.Date(Date, format = "%m/%d/%Y"),
+    `Order Time` = trimws(`Order Time`)
+  ) %>%
+  select(`Order ID`, `Order Date`, `Order Time`)
+
+cat("[1] df_orders berhasil diparsing. Total baris bersih:", nrow(df_orders), "\n")
+
+# 2. Penanganan Data Pizza Order List
+df_pol <- pizza_order_list_raw %>%
+  rename(timestamp_raw = date, items_str = `pizza.order.list.with.quantity`) %>%
+  separate_rows(items_str, sep = ",\\s*") %>%
+  mutate(
+    items_str = trimws(items_str),
+    Quantity = as.numeric(sub(".*\\s+(\\d+)$", "\\1", items_str)),
+    `Pizza Name ID` = sub("\\s+\\d+$", "", items_str),
+    dt_parsed = parse_date_time(timestamp_raw, orders = "HMS m-d-Y"),
+    `Order Date` = as.Date(dt_parsed),
+    `Order Time` = format(dt_parsed, "%H:%M:%S")
+  ) %>%
+  select(`Order Date`, `Order Time`, `Pizza Name ID`, Quantity)
+
+cat("[2] df_pol berhasil di-unnest dan diparsing. Total baris item:", nrow(df_pol), "\n")
+
+# 3. Penanganan Data Ratings
+df_ratings <- ratings_raw %>%
+  mutate(
+    rating_service = ifelse(rating_service %in% c("-", "na", ""), NA, rating_service),
+    rating_pizza   = ifelse(rating_pizza %in% c("-", "na", "", ""), NA, rating_pizza),
+    `Service Rating` = as.numeric(rating_service),
+    `Pizza Rating`   = as.numeric(rating_pizza)
+  ) %>%
+  rename(`Order ID` = order_id) %>%
+  select(`Order ID`, `Service Rating`, `Pizza Rating`)
+
+cat("[3] df_ratings dibersihkan dari string anomali ('-', 'na'). Total baris:", nrow(df_ratings), "\n")
+
+# 4. Penggabungan (Merge) Tabel Data Pizza Info & Pizza Prices
+df_pizza_lookup <- pizza_info_raw %>%
+  rename(`Pizza Name ID` = pizza_name_id, `Pizza Name` = pizza_name, `Pizza Size` = pizza_size) %>%
+  left_join(
+    pizza_prices_raw %>% rename(`Pizza Name` = pizza_name, `Pizza Size` = pizza_size, `Unit Price` = unit_price),
+    by = c("Pizza Name", "Pizza Size")
+  )
+
+cat("[4] df_pizza_lookup berhasil digabung. Total baris master pizza:", nrow(df_pizza_lookup), "\n")
+```
+
+## NOMOR 2 BAGIAN C
+```{r}
+# Penggabungan Utama berpatokan pada df_orders
+combined_df <- df_orders %>%
+  inner_join(df_pol, by = c("Order Date", "Order Time")) %>%
+  left_join(df_pizza_lookup, by = "Pizza Name ID") %>%
+  left_join(df_ratings, by = "Order ID") %>%
+  mutate(
+    `Total Price` = Quantity * `Unit Price`,
+    `Order Date`  = format(`Order Date`, "%m/%d/%Y")
+  ) %>%
+  select(
+    `Order ID`, `Pizza Name ID`, Quantity, `Order Date`, `Order Time`,
+    `Unit Price`, `Total Price`, `Pizza Size`, `Pizza Name`,
+    `Service Rating`, `Pizza Rating`
+)
+head(combined_df, 10)
+```
+
+## NOMOR 2 BAGIAN D
+```{r}
+# HYBRID INTERPOLATION FUNCTION (LINEAR - EXPONENTIAL DECAY) tanpa library eksternal
+hybrid_interpolate <- function(y, G_max = 10, alpha = 0.1) {
+  n <- length(y)
+  y_filled <- y
+  
+  known_idx <- which(!is.na(y))
+  if (length(known_idx) == 0) return(y_filled)
+  if (length(known_idx) < 2) {
+    # Jika hanya ada 1 titik valid, isi semua dengan titik tersebut
+    y_filled[is.na(y_filled)] <- y[known_idx[1]]
+    return(y_filled)
+  }
+  
+  # 1. Jalankan interpolasi utama
+  for (k in 1:(length(known_idx) - 1)) {
+    l <- known_idx[k]
+    r <- known_idx[k + 1]
+    if (r - l > 1) {
+      g <- r - l
+      y_l <- y[l]
+      y_r <- y[r]
+      for (i in (l + 1):(r - 1)) {
+        delta <- (i - l) / g
+        if (g <= G_max) {
+          y_filled[i] <- y_l + (y_r - y_l) * delta
+        } else {
+          y_filled[i] <- y_r - (y_r - y_l) * (1 - exp(-alpha * delta))
+        }
+      }
+    }
+  }
+  
+  # 2. Penanganan Edge Cases (Base R murni untuk ujung awal & akhir)
+  first_valid <- known_idx[1]
+  last_valid <- known_idx[length(known_idx)]
+  
+  # Isi leading NA (sebelum titik valid pertama) dengan nilai valid pertama
+  if (first_valid > 1) {
+    y_filled[1:(first_valid - 1)] <- y_filled[first_valid]
+  }
+  # Isi trailing NA (setelah titik valid terakhir) dengan nilai valid terakhir
+  if (last_valid < n) {
+    y_filled[(last_valid + 1):n] <- y_filled[last_valid]
+  }
+  
+  return(y_filled)
+}
+
+# Pengujian Fungsi dengan Sampel Data dari Soal
+sample_y <- c(2.0, 2.4, NA, NA, 3.1, 3.5, 3.9, 4.2, 4.6, 5.0, 
+              NA, NA, NA, NA, NA, NA, NA, NA, NA, 12.0)
+
+test_filled <- hybrid_interpolate(sample_y, G_max = 3, alpha = 0.5)
+cat("\nHasil Uji Fungsi Interpolasi Hibrida pada Sampel Data\n")
+print(round(test_filled, 2))
+```
+
+# NOMOR 2 BAGIAN E
+```{r}
+# Menerapkan fungsi interpolasi (G_max = 10, alpha = 0.1) pada variabel rating
+combined_df_clean <- combined_df %>%
+  mutate(
+    `Service Rating` = hybrid_interpolate(`Service Rating`, G_max = 10, alpha = 0.1),
+    `Pizza Rating`   = hybrid_interpolate(`Pizza Rating`, G_max = 10, alpha = 0.1)
+  )
+cat("\nJumlah missing value Service Rating setelah interpolasi:", sum(is.na(combined_df_clean$`Service Rating`)), "\n")
+cat("Jumlah missing value Pizza Rating setelah interpolasi  :", sum(is.na(combined_df_clean$`Pizza Rating`)), "\n")
+head(combined_df_clean$`Service Rating`)
+```
+
+# NOMOR 2 BAGIAN F
+```{r}
+# Fungsi Statistika Deskriptif tanpa mean(), median(), sd(), min(), max() bawaan R
+calculate_manual_stats <- function(df) {
+  # Ambil hanya variabel numerik
+  numeric_cols <- names(df)[sapply(df, is.numeric)]
+  
+  res_list <- list()
+  
+  for (col in numeric_cols) {
+    x <- df[[col]]
+    x <- x[!is.na(x)] # Hapus NA
+    
+    n_val <- length(x)
+    if (n_val == 0) next
+    
+    # 1. Calculation of Mean
+    sum_val <- 0
+    for (val in x) sum_val <- sum_val + val
+    mean_val <- sum_val / n_val
+    
+    # 2. Calculation of Minimum & Maximum
+    min_val <- x[1]
+    max_val <- x[1]
+    for (val in x) {
+      if (val < min_val) min_val <- val
+      if (val > max_val) max_val <- val
+    }
+    
+    # 3. Calculation of Median
+    x_sorted <- sort(x)
+    if (n_val %% 2 == 1) {
+      median_val <- x_sorted[(n_val + 1) / 2]
+    } else {
+      median_val <- (x_sorted[n_val / 2] + x_sorted[(n_val / 2) + 1]) / 2
+    }
+    
+    # 4. Calculation of Standard Deviation (Sample SD)
+    sum_sq_diff <- 0
+    for (val in x) {
+      sum_sq_diff <- sum_sq_diff + (val - mean_val)^2
+    }
+    sd_val <- sqrt(sum_sq_diff / (n_val - 1))
+    
+    # Simpan hasil
+    res_list[[col]] <- data.frame(
+      Variable = col,
+      Mean     = round(mean_val, 4),
+      Median   = round(median_val, 4),
+      Std_Dev  = round(sd_val, 4),
+      Min      = round(min_val, 4),
+      Max      = round(max_val, 4)
+    )
+  }
+  
+  final_stats <- do.call(rbind, res_list)
+  rownames(final_stats) <- NULL
+  return(final_stats)
+}
+
+# Jalankan Fungsi Statistik Manual pada Dataset Bersih
+summary_table <- calculate_manual_stats(combined_df_clean)
+summary_table
+```
+
